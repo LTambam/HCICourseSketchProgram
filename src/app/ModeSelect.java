@@ -1,0 +1,148 @@
+package app;
+
+import java.awt.*;
+import java.awt.event.*;
+
+public class ModeSelect implements Mode, MenuConstants{
+    private String mode = modeSelect;
+    SketchFrame sf;
+    final static float dash1[] = {10.0f};
+    final static BasicStroke dashed =
+        new BasicStroke(1.0f,
+                    BasicStroke.CAP_BUTT,
+                    BasicStroke.JOIN_MITER,
+                    10.0f, dash1, 0.0f);
+    
+    public boolean moveCmd = false;
+
+    ModeSelect(SketchFrame sf){
+        this.sf = sf;
+    }
+    public String getMode(){
+        return this.mode;
+    }
+    public void draw(Graphics2D g2d){
+        g2d.setStroke(new BasicStroke());
+        g2d.setStroke(dashed);
+        g2d.setColor(Color.GREEN);
+
+        for(int i=0; i<sf.sketchAl.size(); i++){
+            if(sf.sketchAl.get(i).isSelected){
+                SketchGroup tmpSG = (SketchGroup)sf.sketchAl.get(i);
+                Rectangle tmpRect = new Rectangle();
+                int[] bounds = tmpSG.getBounds();
+                tmpRect.setFrameFromDiagonal(bounds[0], bounds[1], bounds[2], bounds[3]);
+                
+                g2d.draw(tmpRect);
+            }
+        }
+    }
+    public void mouseMove(MouseEvent e){
+        Point p = e.getPoint();
+        if (sf.moveCmd){
+            if(sf.state==1){
+            // move the object with the mouse movement
+                sf.currPoint = p;
+                if (sf.currPoint != sf.prevPoint){
+                    int tx = (sf.currPoint.x-sf.prevPoint.x);
+                    int ty = (sf.currPoint.y-sf.prevPoint.y);
+                    
+                    for(int i=0; i<sf.sketchAl.size(); i++){
+                        if (sf.sketchAl.get(i).isSelected){
+                            SketchGroup tmpSG = (SketchGroup)sf.sketchAl.get(i);
+                            tmpSG.applyTranslation(tx, ty);
+                            sf.sketchAl.set(i, tmpSG);
+                        }
+                    }
+                    sf.prevPoint = sf.currPoint;
+                }
+            }
+        }else{
+            // change the cursor to show that it is on an object boundary
+            Boolean selFlag = false;
+            sf.movePoint = p;
+            for(int i=0; i<sf.sketchAl.size(); i++){
+                if(sf.sketchAl.get(i).checkSelected(sf.movePoint, SketchFrame.sel_thr)){
+                    selFlag = true;
+                }
+            }
+            if (selFlag){
+                sf.cursor = Cursor.HAND_CURSOR;
+            }else{
+                sf.cursor = Cursor.DEFAULT_CURSOR;
+            }
+        }
+    }
+    public void mouseClickS0(MouseEvent e){
+        sf.state = 0;
+        for(int i=0; i<sf.sketchAl.size(); i++){
+            if(sf.sketchAl.get(i).checkSelected(sf.clickPoint, SketchFrame.sel_thr)){
+                SketchGroup tmpSG = (SketchGroup)sf.sketchAl.get(i);
+                tmpSG.isSelected = true;
+                sf.sketchAl.set(i, tmpSG);
+                sf.state = 1;
+            }else{
+                SketchGroup tmpSG = (SketchGroup)sf.sketchAl.get(i);
+                tmpSG.isSelected = false;
+                sf.sketchAl.set(i, tmpSG);
+            }
+        }
+    }
+    public void mouseClickS1(MouseEvent e){
+        // need to add functionality
+
+        if(e.isControlDown()&& !sf.moveCmd){
+            sf.state = 1;
+            for(int i=0; i<sf.sketchAl.size(); i++){
+                if (sf.sketchAl.get(i).isSelected==false){
+                    if(sf.sketchAl.get(i).checkSelected(sf.clickPoint, SketchFrame.sel_thr)){
+                        SketchGroup tmpSG = (SketchGroup)sf.sketchAl.get(i);
+                        tmpSG.isSelected = true;
+                        sf.sketchAl.set(i, tmpSG);
+                    }else{
+                        SketchGroup tmpSG = (SketchGroup)sf.sketchAl.get(i);
+                        tmpSG.isSelected = false;
+                        sf.sketchAl.set(i, tmpSG);
+                    }
+                }
+            }
+        }else{
+            sf.state = 0;
+            for(int i=0; i<sf.sketchAl.size(); i++){
+                if(sf.sketchAl.get(i).checkSelected(sf.clickPoint, SketchFrame.sel_thr)){
+                    SketchGroup tmpSG = (SketchGroup)sf.sketchAl.get(i);
+                    tmpSG.isSelected = true;
+                    sf.sketchAl.set(i, tmpSG);
+                    sf.state = 1;
+                }else{
+                    SketchGroup tmpSG = (SketchGroup)sf.sketchAl.get(i);
+                    tmpSG.isSelected = false;
+                    sf.sketchAl.set(i, tmpSG);
+                }
+            }
+            sf.moveCmd=false;
+        }
+    }
+    public void keyType(){
+        if(sf.state==1){
+            if(sf.moveCmd){
+                int tx = sf.startPoint.x-sf.currPoint.x;
+                int ty = sf.startPoint.y-sf.currPoint.y;
+
+                for(int i=0; i<sf.sketchAl.size(); i++){
+                    if (sf.sketchAl.get(i).isSelected){
+                        sf.sketchAl.get(i).applyTranslation(tx, ty);
+                        //sf.sketchal.set(i) need to set, or does it just apply translation 
+                    }
+                }
+                sf.moveCmd=false;
+            }
+            for(int i=0; i<sf.sketchAl.size(); i++){
+                SketchGroup tmpSG = (SketchGroup)sf.sketchAl.get(i);
+                tmpSG.isSelected = true;
+                sf.sketchAl.set(i, tmpSG);
+            }
+            sf.state = 0;
+        }
+    }
+}

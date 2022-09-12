@@ -55,7 +55,7 @@ public class AwtAdapterDemo {
 
       Label msglabel = new Label();
       msglabel.setAlignment(Label.CENTER);
-      msglabel.setText("Welcome to TutorialsPoint AWT Tutorial.");
+      msglabel.setText("Welcome to Tutorialsfoint AWT Tutorial.");
       panel.add(msglabel);
 
       controlPanel.add(panel);

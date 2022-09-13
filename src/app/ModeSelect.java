@@ -2,6 +2,7 @@ package app;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.*;
 
 public class ModeSelect implements Mode, MenuConstants{
     private String mode = modeSelect;
@@ -26,13 +27,13 @@ public class ModeSelect implements Mode, MenuConstants{
         g2d.setStroke(dashed);
         g2d.setColor(Color.GREEN);
 
-        for(int i=0; i<sf.sketchAl.size(); i++){
-            if(sf.sketchAl.get(i).isSelected){
-                SketchGroup tmpSG = (SketchGroup)sf.sketchAl.get(i);
+        Iterator<SketchComponent> it = sf.sketchAl.iterator();
+        while (it.hasNext()){
+            SketchComponent sg = it.next();
+            if(sg.checkSelected()){
                 Rectangle tmpRect = new Rectangle();
-                int[] bounds = tmpSG.getBounds();
+                int[] bounds = sg.getBounds();
                 tmpRect.setFrameFromDiagonal(bounds[0], bounds[1], bounds[2], bounds[3]);
-                
                 g2d.draw(tmpRect);
             }
         }
@@ -46,12 +47,12 @@ public class ModeSelect implements Mode, MenuConstants{
                 if (sf.currPoint != sf.prevPoint){
                     int tx = (sf.currPoint.x-sf.prevPoint.x);
                     int ty = (sf.currPoint.y-sf.prevPoint.y);
-                    
-                    for(int i=0; i<sf.sketchAl.size(); i++){
-                        if (sf.sketchAl.get(i).isSelected){
-                            SketchGroup tmpSG = (SketchGroup)sf.sketchAl.get(i);
-                            tmpSG.applyTranslation(tx, ty);
-                            sf.sketchAl.set(i, tmpSG);
+
+                    Iterator<SketchComponent> it = sf.sketchAl.iterator();
+                    while (it.hasNext()){
+                        SketchComponent sg = it.next();
+                        if(sg.checkSelected()){
+                            sg.applyTranslation(tx, ty);
                         }
                     }
                     sf.prevPoint = sf.currPoint;
@@ -61,8 +62,10 @@ public class ModeSelect implements Mode, MenuConstants{
             // change the cursor to show that it is on an object boundary
             Boolean selFlag = false;
             sf.movePoint = p;
-            for(int i=0; i<sf.sketchAl.size(); i++){
-                if(sf.sketchAl.get(i).checkSelected(sf.movePoint, SketchFrame.sel_thr)){
+            Iterator<SketchComponent> it = sf.sketchAl.iterator();
+            while (it.hasNext()){
+                SketchComponent sg = it.next();
+                if(sg.checkHovering(sf.movePoint, SketchFrame.sel_thr)){
                     selFlag = true;
                 }
             }
@@ -75,16 +78,14 @@ public class ModeSelect implements Mode, MenuConstants{
     }
     public void mouseClickS0(MouseEvent e){
         sf.state = 0;
-        for(int i=0; i<sf.sketchAl.size(); i++){
-            if(sf.sketchAl.get(i).checkSelected(sf.clickPoint, SketchFrame.sel_thr)){
-                SketchGroup tmpSG = (SketchGroup)sf.sketchAl.get(i);
-                tmpSG.isSelected = true;
-                sf.sketchAl.set(i, tmpSG);
+        Iterator<SketchComponent> it = sf.sketchAl.iterator();
+        while (it.hasNext()){
+            SketchComponent sg = it.next();
+            if(sg.checkHovering(sf.clickPoint, SketchFrame.sel_thr)){
+                sg.setSelected(true);
                 sf.state = 1;
             }else{
-                SketchGroup tmpSG = (SketchGroup)sf.sketchAl.get(i);
-                tmpSG.isSelected = false;
-                sf.sketchAl.set(i, tmpSG);
+                sg.setSelected(false);
             }
         }
     }
@@ -93,31 +94,27 @@ public class ModeSelect implements Mode, MenuConstants{
 
         if(e.isControlDown()&& !sf.moveCmd){
             sf.state = 1;
-            for(int i=0; i<sf.sketchAl.size(); i++){
-                if (sf.sketchAl.get(i).isSelected==false){
-                    if(sf.sketchAl.get(i).checkSelected(sf.clickPoint, SketchFrame.sel_thr)){
-                        SketchGroup tmpSG = (SketchGroup)sf.sketchAl.get(i);
-                        tmpSG.isSelected = true;
-                        sf.sketchAl.set(i, tmpSG);
+            Iterator<SketchComponent> it = sf.sketchAl.iterator();
+            while (it.hasNext()){
+                SketchComponent sg = it.next();
+                if(!sg.checkSelected()){
+                    if(sg.checkHovering(sf.clickPoint, SketchFrame.sel_thr)){
+                        sg.setSelected(true);
                     }else{
-                        SketchGroup tmpSG = (SketchGroup)sf.sketchAl.get(i);
-                        tmpSG.isSelected = false;
-                        sf.sketchAl.set(i, tmpSG);
+                        sg.setSelected(false);
                     }
                 }
             }
         }else{
             sf.state = 0;
-            for(int i=0; i<sf.sketchAl.size(); i++){
-                if(sf.sketchAl.get(i).checkSelected(sf.clickPoint, SketchFrame.sel_thr)){
-                    SketchGroup tmpSG = (SketchGroup)sf.sketchAl.get(i);
-                    tmpSG.isSelected = true;
-                    sf.sketchAl.set(i, tmpSG);
-                    sf.state = 1;
+            Iterator<SketchComponent> it = sf.sketchAl.iterator();
+            while (it.hasNext()){
+                SketchComponent sg = it.next();
+                if(sg.checkHovering(sf.clickPoint, SketchFrame.sel_thr)){
+                    sg.setSelected(true);
+                    sf.state=1;
                 }else{
-                    SketchGroup tmpSG = (SketchGroup)sf.sketchAl.get(i);
-                    tmpSG.isSelected = false;
-                    sf.sketchAl.set(i, tmpSG);
+                    sg.setSelected(false);
                 }
             }
             sf.moveCmd=false;
@@ -129,16 +126,17 @@ public class ModeSelect implements Mode, MenuConstants{
                 int tx = sf.startPoint.x-sf.currPoint.x;
                 int ty = sf.startPoint.y-sf.currPoint.y;
 
-                for(int i=0; i<sf.sketchAl.size(); i++){
-                    if (sf.sketchAl.get(i).isSelected){
-                        sf.sketchAl.get(i).applyTranslation(tx, ty);
-                        //sf.sketchal.set(i) need to set, or does it just apply translation 
+                Iterator<SketchComponent> it = sf.sketchAl.iterator();
+                while (it.hasNext()){
+                    SketchComponent sg = it.next();
+                    if(sg.checkSelected()){
+                        sg.applyTranslation(tx, ty);
                     }
                 }
                 sf.moveCmd=false;
             }
             for(int i=0; i<sf.sketchAl.size(); i++){
-                SketchGroup tmpSG = (SketchGroup)sf.sketchAl.get(i);
+                SketchNode tmpSG = (SketchNode)sf.sketchAl.get(i);
                 tmpSG.isSelected = true;
                 sf.sketchAl.set(i, tmpSG);
             }

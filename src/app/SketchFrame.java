@@ -26,8 +26,8 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
 
     Mode mode;
 
-    public ArrayList<SketchGroup> sketchAl = new ArrayList<SketchGroup>();
-    ArrayList<SketchGroup> copyAl = new ArrayList<SketchGroup>();
+    public ArrayList<SketchComponent> sketchAl = new ArrayList<SketchComponent>();
+    ArrayList<SketchComponent> copyAl = new ArrayList<SketchComponent>();
     Stack<SketchCmd> cmdStack = new Stack<SketchCmd>();
     Stack<SketchCmd> undoCmdStack = new Stack<SketchCmd>();
 
@@ -71,7 +71,7 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
             }
         };
         addWindowListener(frameClose);
-        addKeyListener(new KeyEventAdapter(this));
+        
 
         setVisible(true);
 
@@ -153,10 +153,10 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
         changeMode(new ModeSelect(this));
         tbp.setSelBtn(true);           
         state = 1;
-        for(int i=0; i<sketchAl.size(); i++){
-            SketchGroup tmpSG = (SketchGroup)sketchAl.get(i);
-            tmpSG.isSelected = true;
-            sketchAl.set(i, tmpSG);
+        Iterator<SketchComponent> it = sketchAl.iterator();
+        while (it.hasNext()){
+            SketchComponent sg = it.next();
+            sg.setSelected(true);
         }
     }
     public void handleUndo(){
@@ -256,12 +256,13 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
     }
     public void handleGroup(){
         // if(mode.getMode()==modeSelect && state==1){
-        //     SketchGroup sg = new SketchGroup(true);
+        //     SketchNode sg = new SketchNode(true);
         //     for(int i=0; i<sketchAl.size(); i++){
-        //         if (sketchAl.get(i).isSelected){
-        //             SketchGroup tmpSg = sketchAl.get(i);
-                    
-                    
+        //         SketchNode tmpSg = sketchAl.get(i);
+        //         if (tmpSg.isSelected){
+        //             for(int j=0; j<tmpSg.size(); j++){
+        //                 sg.add(tmpSg.get(j));
+        //             }
         //         }
         //     }
         // }

@@ -4,22 +4,34 @@ import java.awt.*;
 import java.util.*;
 
 public class SketchShape extends ArrayList<Point>{
-    Color color;
-    Boolean isSelected;
-    
-    SketchShape(){
+    private Color color;
+    private Boolean isSelected;
+
+    public SketchShape(){
         color = Color.black;
         isSelected = false;
     }
-    SketchShape(Color color){
+    public SketchShape(Color color){
         this.color = color;
         isSelected = false; 
     }
-    SketchShape(Color color, Boolean isSelected){
+    public SketchShape(Color color, Boolean isSelected){
         this.color = color;
         this.isSelected = isSelected; 
     }
-    public Boolean checkSelected(Point p, double thr){
+    public void setSelected(Boolean isSelected){
+        this.isSelected = isSelected;
+    }
+    public Boolean getSelected(){
+        return isSelected;
+    }
+    public void setColor(Color color){
+        this.color = color;
+    }
+    public Color getColor(){
+        return color;
+    }
+    public Boolean checkHovering(Point p, double thr){
         double x, y;
         for (int i=0; i<this.size();i++){
             x = this.get(i).x;

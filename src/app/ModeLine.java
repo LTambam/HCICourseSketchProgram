@@ -27,16 +27,16 @@ public class ModeLine implements Mode, MenuConstants{
     }
     public void mouseClickS0(MouseEvent e){
         sf.state = 1;
-        sf.ss = new SketchShape();
+        sf.ss = new SketchShape(sf.color);
         sf.ss.add(sf.clickPoint);
     }
     public void mouseClickS1(MouseEvent e){
         sf.ss.add(sf.currPoint);
         SketchShape ss = sf.ss;
-        SketchGroup sg = new SketchGroup(ss);
-        sf.sketchAl.add(sg);
+        SketchComponent sl = new SketchLeaf(ss);
+        sf.sketchAl.add(sl);
         sf.startPoint=sf.currPoint;
-        sf.ss = new SketchShape();
+        sf.ss = new SketchShape(sf.color);
         sf.ss.add(sf.startPoint);
         sf.state=1;        
     }

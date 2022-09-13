@@ -37,11 +37,11 @@ public class ModeRect implements Mode, MenuConstants{
     }
     public void mouseClickS1(MouseEvent e){
         SketchShape ss = ArrayConverter.getArrayFromRect(sf.rect);
-        ss.color = sf.color;
-        SketchGroup sg = new SketchGroup(ss);
-        sf.sketchAl.add(sg);
+        ss.setColor(sf.color);
+        SketchComponent sl = new SketchLeaf(ss);
+        sf.sketchAl.add(sl);
     }
     public void keyType(){
-
+        sf.state=0;
     }
 }

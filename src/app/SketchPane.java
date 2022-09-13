@@ -9,7 +9,7 @@ public class SketchPane extends JPanel implements MenuConstants {
     private Stack<SketchShape> stack;
     SketchFrame sf;
 
-    public ArrayList<SketchGroup> sketchal = new ArrayList<SketchGroup>();
+    public ArrayList<SketchComponent> sketchal = new ArrayList<SketchComponent>();
 
     public SketchPane(SketchFrame sf){
         this.sf = sf;
@@ -19,6 +19,8 @@ public class SketchPane extends JPanel implements MenuConstants {
 
         addMouseListener(new MouseEventAdapter(sf));
         addMouseMotionListener(new MouseEventAdapter(sf));
+
+        addKeyListener(new KeyEventAdapter(sf));
     }
     public void push(SketchShape ss){
         stack.push(ss);
@@ -36,18 +38,11 @@ public class SketchPane extends JPanel implements MenuConstants {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g.create();
         
-        Iterator<SketchGroup> it = sf.sketchAl.iterator();
+        Iterator<SketchComponent> it = sf.sketchAl.iterator();
 
         while (it.hasNext()){
-            Iterator<SketchShape> it2 = it.next().iterator();
-            while(it2.hasNext()){
-                SketchShape tmpSS = it2.next();
-                g2d.setColor(tmpSS.color);
-                for (int i=1; i<tmpSS.size();i++){
-                    g2d.drawLine((int)tmpSS.get(i-1).getX(), (int)tmpSS.get(i-1).getY(),
-                            (int)tmpSS.get(i).getX(), (int)tmpSS.get(i).getY());
-                }
-            }
+            SketchComponent sg = it.next();
+            sg.paintComponent(g2d);
         }
         if (sf.state == 1){
             g2d.setColor(sf.color);

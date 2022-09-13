@@ -2,6 +2,7 @@ package app;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.*;
 
 public class MouseEventAdapter extends MouseAdapter implements MenuConstants{
     SketchFrame sf;
@@ -19,8 +20,10 @@ public class MouseEventAdapter extends MouseAdapter implements MenuConstants{
         sf.clickPoint = new Point(e.getPoint());
 
         if (sf.state == 0) {
-            for(int i=0; i<sf.sketchAl.size(); i++){
-                sf.sketchAl.get(i).isSelected=false;
+            Iterator<SketchComponent> it = sf.sketchAl.iterator();
+            while (it.hasNext()){
+                SketchComponent sg = it.next();
+                sg.setSelected(false);
             }
             sf.currPoint = sf.prevPoint = sf.startPoint = sf.clickPoint;
             sf.mode.mouseClickS0(e);

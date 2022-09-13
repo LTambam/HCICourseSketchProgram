@@ -38,12 +38,12 @@ public class ModeFree implements Mode, MenuConstants {
         sf.ss.add(sf.clickPoint);
     }
     public void mouseClickS1(MouseEvent e){
-        // add SketchShape to the array list
         SketchShape ss = sf.ss;
-        ss.color = sf.color;
-        SketchGroup sg = new SketchGroup(ss);
-        sf.sketchAl.add(sg);
+        ss.setColor(sf.color);
+        SketchComponent sl = new SketchLeaf(ss);
+        sf.sketchAl.add(sl);
     }
     public void keyType(){
+        sf.state=0;
     }
 }

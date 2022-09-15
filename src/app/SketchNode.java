@@ -3,6 +3,7 @@ package app;
 import java.awt.*;
 import java.util.*;
 
+
 // so that each sketch can have mutliple sketchshapes within it.
 public class SketchNode extends SketchComponent{
     Iterator<SketchComponent> iterator = null;
@@ -16,7 +17,7 @@ public class SketchNode extends SketchComponent{
         this.isSelected = isSelected;
     }
     public SketchNode(SketchComponent sketchComponent){
-        add(sketchComponent);
+        sketchComponents.add(sketchComponent);
         isSelected = false;
     }
     public void add(SketchComponent sketchComponent){
@@ -103,4 +104,5 @@ public class SketchNode extends SketchComponent{
         }
         return iterator;
     }
+    
 }

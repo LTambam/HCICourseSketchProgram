@@ -5,6 +5,7 @@ import java.util.*;
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.geom.Ellipse2D.Double;
+import java.io.*;
 
 // try the toolbar instead of the menubar for performing certain operations.
 
@@ -90,7 +91,6 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
     public void actionPerformed(ActionEvent e) {
         String cmdText = e.getActionCommand();
         switchFocus();
-        System.out.println("SF is focus: "+isFocusOwner());
         System.out.println(cmdText);
                 
         switch (cmdText){
@@ -101,7 +101,6 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
                 handleUndo();
                 break; 
             case editRedo:
-            //code that pops objects off the new temp stack and puts them on the stack if there is any left
                 handleRedo();
                 break;
             case editCut:
@@ -161,8 +160,8 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
         state = 1;
         Iterator<SketchComponent> it = sketchAl.iterator();
         while (it.hasNext()){
-            SketchComponent sg = it.next();
-            sg.setSelected(true);
+            SketchComponent sn = it.next();
+            sn.setSelected(true);
         }
     }
     public void handleUndo(){
@@ -205,77 +204,95 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
         }
     }
     public void handleCut(){
-        // if(mode==modeSelect && state==1){
-        //     copyStack.clear();
-        //     for(int i=0; i<sketchAl.size(); i++){
-        //         if (sketchAl.get(i).isSelected){
-        //             copyStack.push(sketchAl.get(i));
-        //             continue;
-        //         }
-        //     }
-        // }
-}
+        if(mode.getMode()==modeSelect && state==1){
+            Iterator<SketchComponent> it = sketchAl.iterator();
+            while (it.hasNext()){
+                SketchComponent sn = it.next();
+                if(sn.checkSelected()){
+                    copyAl.add(sn);
+                }
+            }
+            it = copyAl.iterator();
+            while (it.hasNext()){
+                SketchComponent sn = it.next();
+                sketchAl.remove(sn);
+            }
+        }
+    }
     public void handleCopy(){
-        // if(mode==modeSelect && state==1){
-        //     copyStack.clear();
-        //     for(int i=0; i<sketchAl.size(); i++){
-        //         if (sketchAl.get(i).isSelected){
-        //             copyStack.push(sketchAl.get(i));
-        //             continue;
-        //         }
-        //     }
-        // }
+        if(mode.getMode()==modeSelect && state==1){
+            Iterator<SketchComponent> it = sketchAl.iterator();
+            while (it.hasNext()){
+                SketchComponent sn = it.next();
+                if(sn.checkSelected()){
+                    copyAl.add(copySketchComponent(sn));
+                }
+            }
+        }
     }
     public void handlePaste(){
-        // Point newPoint = new Point();
-        // newPoint = f.getContentPane().getMousePosition();
-        
-        // for(int i=0; i<copyStack.size(); i++){
-        //     SketchShape tmpSS = new SketchShape();
-        //     tmpSS = copyStack.get(i);
+        SketchNode tmpNode = new SketchNode();
 
-        //     Point oldPoint = new Point();
-        //     oldPoint.setLocation(tmpSS.get(0));
-            
-        //     if (newPoint == oldPoint){
-        //         newPoint.translate(20, 20);
-        //     }
-        //     tmpSS.applyTranslation(newPoint.x-oldPoint.x, newPoint.y-oldPoint.y);
+        Iterator<SketchComponent> it = copyAl.iterator();
+        while (it.hasNext()){
+            SketchComponent sn = it.next();
+            tmpNode.add(copySketchComponent(sn));
+        }
 
-        //     sketchStack.push((SketchShape)tmpSS.clone());
-        // }
+        Point tlPoint = new Point();
+        int[] outerBounds = tmpNode.getBounds();
+        tlPoint.setLocation(outerBounds[0], outerBounds[1]);
+        // System.out.println("Top Left " + tlPoint.x+ " " +tlPoint.y);
+
+        Point newtlPoint = new Point();
+        newtlPoint = getContentPane().getMousePosition();
+        if (newtlPoint == tlPoint){ newtlPoint.translate(20, 20); }
+        // System.out.println("New Top Left "+newtlPoint.x+" "+ newtlPoint.y);
+
+        it = copyAl.iterator();
+        while (it.hasNext()){
+            SketchComponent sn = copySketchComponent(it.next());
+            sn.applyTranslation(newtlPoint.x-tlPoint.x, newtlPoint.y-tlPoint.y);
+            sketchAl.add(sn);
+        }
     }
     public void handleDelete(){
-        // if(mode==modeSelect && state ==1){
-        //     for(int i=0; i<sketchAl.size(); i++){
-        //         if (sketchAl.get(i).isSelected){
-        //             sketchAl.remove(i);
-        //             i = i-1;
-        //         }
-        //     }
-        // }
+        if(mode.getMode()==modeSelect && state==1){
+            Iterator<SketchComponent> it = sketchAl.iterator();
+            while (it.hasNext()){
+                SketchComponent sn = it.next();
+                if(sn.checkSelected()){
+                    copyAl.add(sn);
+                }
+            }
+            it = copyAl.iterator();
+            while (it.hasNext()){
+                SketchComponent sn = it.next();
+                sketchAl.remove(sn);
+            }
+            copyAl.clear();
+        }
     }
     public void handleMove(){
-        if(mode.getMode()==modeSelect){
+        if(mode.getMode()==modeSelect && state==1){
             moveCmd = true;
         }
     }
     public void handleGroup(){
         if(mode.getMode()==modeSelect && state==1){
             Iterator<SketchComponent> it = sketchAl.iterator();
-            SketchNode sg2 = new SketchNode();
+            SketchNode sn2 = new SketchNode();
             while (it.hasNext()){
-                SketchComponent sg = it.next();
-                if(sg.checkSelected()){
-                    sg.setSelected(false);
-                    sg2.add(sg);
-                    sketchAl.remove(sg);
+                SketchComponent sn = it.next();
+                if(sn.checkSelected()){
+                    sn.setSelected(false);
+                    sn2.add(sn);
+                    sketchAl.remove(sn);
                 }
             }
-            System.out.println(sg2.getSize());
-            if(sg2.getSize()>0){
-                sg2.setSelected(true);
-                sketchAl.add(sg2);
+            if(sn2.getSize()>0){
+                sn2.setSelected(true);
+                sketchAl.add(sn2);
             }
         }
     }
@@ -283,18 +300,53 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
         if(mode.getMode()==modeSelect && state==1){
             Iterator<SketchComponent> it = sketchAl.iterator();
             while (it.hasNext()){
-                SketchComponent sg = it.next();
-                if(sg.checkSelected() && sg.getSize()>1){
+                SketchComponent sn = it.next();
+                if(sn.checkSelected() && sn.getSize()>1){
                     int i=0;
-                    while(sg.getSize()>0){
-                        SketchComponent sc = sg.getChild(i);
+                    while(sn.getSize()>0){
+                        SketchComponent sc = sn.getChild(i);
                         sc.setSelected(true);
                         sketchAl.add(sc);
-                        sg.remove(sc);
+                        sn.remove(sc);
                     }
-                    sketchAl.remove(sg);
+                    sketchAl.remove(sn);
                 }
             }
         }
+    }
+    public SketchComponent copySketchComponent(SketchComponent sc){
+        SketchComponent clone = null;
+        try {
+            // Create a byte array output stream
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+ 
+            // Use byte array output stream to create an object output stream
+            ObjectOutputStream oos = new ObjectOutputStream(bos);
+ 
+            // Serialization – Pass the object that we want to copy to the
+            // ObjectOutputStream's `writeObject()` method
+            oos.writeObject(sc);
+            oos.flush();
+ 
+            // toByteArray creates & returns a copy of the stream's byte array
+            byte[] bytes = bos.toByteArray();
+ 
+            // Create a byte array input stream
+            ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+ 
+            // Use byte array input stream to create an object input stream
+            ObjectInputStream ois = new ObjectInputStream(bis);
+ 
+            // deserialize the serialized object using ObjectInputStream's
+            // `readObject()` method and typecast it to the class of the object
+            clone = (SketchComponent) ois.readObject();
+        }
+        catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return clone;
     }
 }

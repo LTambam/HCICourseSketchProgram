@@ -2,8 +2,9 @@ package app;
 
 import java.util.*;
 import java.awt.*;
+import java.io.Serializable;
 
-public abstract class SketchComponent {
+public abstract class SketchComponent implements Serializable{
     public void add(SketchComponent sketchComponent){
         throw new UnsupportedOperationException();
     }

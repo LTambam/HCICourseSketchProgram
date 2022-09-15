@@ -41,8 +41,6 @@ public class SketchPane extends JPanel implements MenuConstants {
         
         Iterator<SketchComponent> it = sf.sketchAl.iterator();
 
-        System.out.println("SP is focus: "+isFocusOwner());
-
         while (it.hasNext()){
             SketchComponent sg = it.next();
             sg.paintComponent(g2d);

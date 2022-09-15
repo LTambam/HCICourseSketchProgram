@@ -57,7 +57,7 @@ public class ToolPane extends JPanel implements MenuConstants, ActionListener{
                 sf.handlePaste();
                 break;
             case editDelete:
-                sf.handleUndo();
+                sf.handleDelete();
                 break;
             case editMove:
                 sf.handleMove();

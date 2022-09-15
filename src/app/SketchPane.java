@@ -20,7 +20,7 @@ public class SketchPane extends JPanel implements MenuConstants {
         addMouseListener(new MouseEventAdapter(sf));
         addMouseMotionListener(new MouseEventAdapter(sf));
 
-        addKeyListener(new KeyEventAdapter(sf));
+        
     }
     public void push(SketchShape ss){
         stack.push(ss);
@@ -28,6 +28,7 @@ public class SketchPane extends JPanel implements MenuConstants {
     public SketchShape pop(){
         return stack.pop();
     }
+    
     @Override
     public Dimension getPreferredSize() {
         return new Dimension(800, 800);
@@ -39,6 +40,8 @@ public class SketchPane extends JPanel implements MenuConstants {
         Graphics2D g2d = (Graphics2D) g.create();
         
         Iterator<SketchComponent> it = sf.sketchAl.iterator();
+
+        System.out.println("SP is focus: "+isFocusOwner());
 
         while (it.hasNext()){
             SketchComponent sg = it.next();

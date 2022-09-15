@@ -53,6 +53,8 @@ public class LayoutUtils implements MenuConstants {
         
         createMenuItem(formatColor, editMenu, KeyEvent.VK_Q, sf);
         editMenu.addSeparator();
+        createMenuItem(editGroup, editMenu, KeyEvent.VK_G, sf);
+        createMenuItem(editUngroup, editMenu, KeyEvent.VK_F, sf);
         createMenuItem(editCut, editMenu, KeyEvent.VK_X, sf);
         createMenuItem(editCopy, editMenu, KeyEvent.VK_C, sf);
         createMenuItem(editPaste, editMenu, KeyEvent.VK_V, sf);

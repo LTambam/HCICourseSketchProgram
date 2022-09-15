@@ -33,7 +33,9 @@ public class ToolPane extends JPanel implements MenuConstants, ActionListener{
     }
 
     public void actionPerformed(ActionEvent e) {
+        
         String cmdText = e.getActionCommand();
+        sf.switchFocus();
         System.out.println(cmdText);
         switch (cmdText){
             case formatColor:
@@ -121,11 +123,12 @@ public class ToolPane extends JPanel implements MenuConstants, ActionListener{
         createToggleToolbarButton(modeCirc, tb1, modeGroup, this);
         selBtn = createToggleToolbarButton(modeSelect, tb1, modeGroup, this);
 
-
         // tb1.add(Box.createRigidArea(new Dimension(5, 5)));
         tb1.add(Box.createGlue());
         // tb1.addSeparator();
         createToolbarButton(formatColor, tb1, this);
+        createToolbarButton(editGroup, tb1, this);
+        createToolbarButton(editUngroup, tb1, this);
         createToolbarButton(editCut, tb1, this);
         createToolbarButton(editCopy, tb1, this);
         createToolbarButton(editPaste, tb1, this);

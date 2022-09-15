@@ -34,6 +34,14 @@ public class SketchLeaf extends SketchComponent{
     public int[] getBounds(){
         return sketchShape.getBounds();
     }
+    @Override
+    public int getSize(){
+        return 1;
+    }
+    @Override
+    public int getGroupSize(){
+        return 1;
+    }
     @Override 
     public void paintComponent(Graphics2D g2d){
         g2d.setColor(sketchShape.getColor());

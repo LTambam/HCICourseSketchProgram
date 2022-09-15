@@ -16,13 +16,13 @@ public class SketchNode extends SketchComponent{
         this.isSelected = isSelected;
     }
     public SketchNode(SketchComponent sketchComponent){
-        addSketch(sketchComponent);
+        add(sketchComponent);
         isSelected = false;
     }
-    public void addSketch(SketchComponent sketchComponent){
+    public void add(SketchComponent sketchComponent){
         sketchComponents.add(sketchComponent);
     }
-    public void removeSketch(SketchComponent sketchComponent){
+    public void remove(SketchComponent sketchComponent){
         sketchComponents.remove(sketchComponent);
     }
     @Override
@@ -64,6 +64,20 @@ public class SketchNode extends SketchComponent{
     @Override
     public SketchComponent getChild(int i){
         return sketchComponents.get(i);
+    }
+    @Override
+    public int getSize(){
+        Iterator<SketchComponent> iterator = sketchComponents.iterator();
+        int size = 0;
+        while(iterator.hasNext()){
+            SketchComponent sketchComponent = iterator.next();
+            size += sketchComponent.getSize();
+        }
+        return size;
+    }
+    @Override
+    public int getGroupSize(){
+        return sketchComponents.size();
     }
     @Override 
     public void paintComponent(Graphics2D g2d){

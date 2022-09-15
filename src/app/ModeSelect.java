@@ -121,7 +121,9 @@ public class ModeSelect implements Mode, MenuConstants{
         }
     }
     public void keyType(){
+        System.out.println("esc pressed while in select");
         if(sf.state==1){
+            System.out.println("esc pressed while in select state 1");
             if(sf.moveCmd){
                 int tx = sf.startPoint.x-sf.currPoint.x;
                 int ty = sf.startPoint.y-sf.currPoint.y;
@@ -134,13 +136,15 @@ public class ModeSelect implements Mode, MenuConstants{
                     }
                 }
                 sf.moveCmd=false;
+            }else{
+                Iterator<SketchComponent> it = sf.sketchAl.iterator();
+                while (it.hasNext()){
+                    SketchComponent sg = it.next();
+                    sg.setSelected(true);
+                }
+                sf.state = 0;
             }
-            for(int i=0; i<sf.sketchAl.size(); i++){
-                SketchNode tmpSG = (SketchNode)sf.sketchAl.get(i);
-                tmpSG.isSelected = true;
-                sf.sketchAl.set(i, tmpSG);
-            }
-            sf.state = 0;
+            
         }
     }
 }

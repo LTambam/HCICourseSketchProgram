@@ -28,6 +28,12 @@ public abstract class SketchComponent {
     public void paintComponent(Graphics2D g2d){
         throw new UnsupportedOperationException();
     }
+    public int getSize(){
+        throw new UnsupportedOperationException();
+    }
+    public int getGroupSize(){
+        throw new UnsupportedOperationException();
+    }
     public void setSelected(Boolean sel){
         throw new UnsupportedOperationException();
     }

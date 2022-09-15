@@ -1,7 +1,5 @@
 package app;
 
-
-
 public class SketchyPad implements MenuConstants {
     
     SketchFrame sf;
@@ -12,7 +10,6 @@ public class SketchyPad implements MenuConstants {
     
     SketchyPad() {
         sf = new SketchFrame(fileName + " - " + applicationName, this);
-        
     }
     public static void main(String[] args) {
         new SketchyPad();

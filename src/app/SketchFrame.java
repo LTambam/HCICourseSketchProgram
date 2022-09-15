@@ -41,9 +41,9 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
 
         this.sp = sp;
 
-        LayoutUtils.createMenuBar(this);
-        
         p = new SketchPane(this);
+
+        LayoutUtils.createMenuBar(this);
 
         tbp = new ToolPane(this);
 
@@ -72,6 +72,8 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
         };
         addWindowListener(frameClose);
         
+        p.requestFocusInWindow();
+        p.addKeyListener(new KeyEventAdapter(this));
 
         setVisible(true);
 
@@ -82,9 +84,13 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
     public void createAndPushCmd(String cmd, int index, SketchShape sketch){
         cmdStack.push(new SketchCmd(cmd, index, sketch));
     }
-    
+    public void switchFocus(){
+        p.requestFocusInWindow();
+    }
     public void actionPerformed(ActionEvent e) {
         String cmdText = e.getActionCommand();
+        switchFocus();
+        System.out.println("SF is focus: "+isFocusOwner());
         System.out.println(cmdText);
                 
         switch (cmdText){
@@ -255,19 +261,40 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
         }
     }
     public void handleGroup(){
-        // if(mode.getMode()==modeSelect && state==1){
-        //     SketchNode sg = new SketchNode(true);
-        //     for(int i=0; i<sketchAl.size(); i++){
-        //         SketchNode tmpSg = sketchAl.get(i);
-        //         if (tmpSg.isSelected){
-        //             for(int j=0; j<tmpSg.size(); j++){
-        //                 sg.add(tmpSg.get(j));
-        //             }
-        //         }
-        //     }
-        // }
+        if(mode.getMode()==modeSelect && state==1){
+            Iterator<SketchComponent> it = sketchAl.iterator();
+            SketchNode sg2 = new SketchNode();
+            while (it.hasNext()){
+                SketchComponent sg = it.next();
+                if(sg.checkSelected()){
+                    sg.setSelected(false);
+                    sg2.add(sg);
+                    sketchAl.remove(sg);
+                }
+            }
+            System.out.println(sg2.getSize());
+            if(sg2.getSize()>0){
+                sg2.setSelected(true);
+                sketchAl.add(sg2);
+            }
+        }
     }
     public void handleUngroup(){
-
+        if(mode.getMode()==modeSelect && state==1){
+            Iterator<SketchComponent> it = sketchAl.iterator();
+            while (it.hasNext()){
+                SketchComponent sg = it.next();
+                if(sg.checkSelected() && sg.getSize()>1){
+                    int i=0;
+                    while(sg.getSize()>0){
+                        SketchComponent sc = sg.getChild(i);
+                        sc.setSelected(true);
+                        sketchAl.add(sc);
+                        sg.remove(sc);
+                    }
+                    sketchAl.remove(sg);
+                }
+            }
+        }
     }
 }

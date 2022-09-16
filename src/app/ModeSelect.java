@@ -28,14 +28,17 @@ public class ModeSelect implements Mode, MenuConstants{
         g2d.setColor(Color.GREEN);
 
         Iterator<SketchComponent> it = sf.sketchAl.iterator();
+        // int i = 0;
         while (it.hasNext()){
-            SketchComponent sg = it.next();
-            if(sg.checkSelected()){
+            // System.out.println("loop "+i);
+            SketchComponent sn = it.next();
+            if(sn.checkSelected()){
                 Rectangle tmpRect = new Rectangle();
-                int[] bounds = sg.getBounds();
+                int[] bounds = sn.getBounds();
                 tmpRect.setFrameFromDiagonal(bounds[0], bounds[1], bounds[2], bounds[3]);
                 g2d.draw(tmpRect);
             }
+            // i = i+1;
         }
     }
     public void mouseMove(MouseEvent e){

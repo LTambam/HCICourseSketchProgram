@@ -29,6 +29,7 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
 
     public ArrayList<SketchComponent> sketchAl = new ArrayList<SketchComponent>();
     ArrayList<SketchComponent> copyAl = new ArrayList<SketchComponent>();
+    ArrayList<SketchComponent> deleteAl = new ArrayList<SketchComponent>();
     Stack<SketchCmd> cmdStack = new Stack<SketchCmd>();
     Stack<SketchCmd> undoCmdStack = new Stack<SketchCmd>();
 
@@ -130,6 +131,7 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
             default:
                 break;
         }
+        p.repaint();
     }
     void changeMode(Mode mode){
         this.mode = mode;
@@ -182,7 +184,6 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
             }
             undoCmdStack.push(tempSC);
         }
-        
     }
     public void handleRedo(){
         if (!undoCmdStack.isEmpty()){
@@ -230,7 +231,7 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
             }
         }
     }
-    public void handlePaste(){
+    public void handlePaste(){ // move is not working with groups
         SketchNode tmpNode = new SketchNode();
 
         Iterator<SketchComponent> it = copyAl.iterator();
@@ -245,7 +246,7 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
         // System.out.println("Top Left " + tlPoint.x+ " " +tlPoint.y);
 
         Point newtlPoint = new Point();
-        newtlPoint = getContentPane().getMousePosition();
+        newtlPoint = p.getMousePosition();
         if (newtlPoint == tlPoint){ newtlPoint.translate(20, 20); }
         // System.out.println("New Top Left "+newtlPoint.x+" "+ newtlPoint.y);
 
@@ -262,59 +263,65 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
             while (it.hasNext()){
                 SketchComponent sn = it.next();
                 if(sn.checkSelected()){
-                    copyAl.add(sn);
+                    deleteAl.add(sn);
                 }
             }
-            it = copyAl.iterator();
+            it = deleteAl.iterator();
             while (it.hasNext()){
                 SketchComponent sn = it.next();
                 sketchAl.remove(sn);
             }
-            copyAl.clear();
+            deleteAl.clear();
         }
     }
-    public void handleMove(){
+    public void handleMove(){ // move is not working with groups
         if(mode.getMode()==modeSelect && state==1){
             moveCmd = true;
         }
     }
     public void handleGroup(){
         if(mode.getMode()==modeSelect && state==1){
-            Iterator<SketchComponent> it = sketchAl.iterator();
             SketchNode sn2 = new SketchNode();
+
+            Iterator<SketchComponent> it = sketchAl.iterator();
             while (it.hasNext()){
                 SketchComponent sn = it.next();
                 if(sn.checkSelected()){
-                    sn.setSelected(false);
-                    sn2.add(sn);
-                    sketchAl.remove(sn);
+                    deleteAl.add(sn);
+                    sn2.add(copySketchComponent(sn));
                 }
             }
-            if(sn2.getSize()>0){
-                sn2.setSelected(true);
-                sketchAl.add(sn2);
+            it = deleteAl.iterator();
+            while (it.hasNext()){
+                SketchComponent sn = it.next();
+                sketchAl.remove(sn);
+                System.out.println(sketchAl.size());
             }
+            deleteAl.clear();
+            sn2.setSelected(true);
+            sketchAl.add(sn2);
         }
     }
     public void handleUngroup(){
         if(mode.getMode()==modeSelect && state==1){
             Iterator<SketchComponent> it = sketchAl.iterator();
+            SketchComponent sc = new SketchNode();
             while (it.hasNext()){
                 SketchComponent sn = it.next();
                 if(sn.checkSelected() && sn.getSize()>1){
-                    int i=0;
-                    while(sn.getSize()>0){
-                        SketchComponent sc = sn.getChild(i);
-                        sc.setSelected(true);
-                        sketchAl.add(sc);
-                        sn.remove(sc);
-                    }
-                    sketchAl.remove(sn);
+                    sc = sn;
                 }
             }
+            it = sc.createIterator();
+            while(it.hasNext()){
+                SketchComponent sn = it.next();
+                sn.setSelected(true);
+                sketchAl.add(copySketchComponent(sn));
+            }
+            sketchAl.remove(sc);
         }
     }
-    public SketchComponent copySketchComponent(SketchComponent sc){
+    public SketchComponent copySketchComponent(SketchComponent sc){ //serialize is not working with groups
         SketchComponent clone = null;
         try {
             // Create a byte array output stream

@@ -1,5 +1,12 @@
 package app;
 
+/*
+ * Features to add:
+ * - drag to move
+ * - box select
+ * 
+ */
+
 public class SketchyPad implements MenuConstants {
     
     SketchFrame sf;

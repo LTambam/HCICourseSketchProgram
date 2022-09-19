@@ -221,6 +221,7 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
         }
     }
     public void handleCopy(){
+        copyAl.clear();
         if(mode.getMode()==modeSelect && state==1){
             Iterator<SketchComponent> it = sketchAl.iterator();
             while (it.hasNext()){
@@ -246,9 +247,16 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
         // System.out.println("Top Left " + tlPoint.x+ " " +tlPoint.y);
 
         Point newtlPoint = new Point();
-        newtlPoint = p.getMousePosition();
-        if (newtlPoint == tlPoint){ newtlPoint.translate(20, 20); }
-        // System.out.println("New Top Left "+newtlPoint.x+" "+ newtlPoint.y);
+        if(p.getMousePosition() != null){
+            newtlPoint = p.getMousePosition();
+            System.out.println("in here");
+        }else{
+            newtlPoint.setLocation(50, 50);;
+        }
+        if (newtlPoint.getLocation() == tlPoint.getLocation()){ 
+            newtlPoint.translate(100, 100); 
+        }
+        System.out.println("New Top Left "+newtlPoint.x+" "+ newtlPoint.y);
 
         it = copyAl.iterator();
         while (it.hasNext()){

@@ -41,7 +41,13 @@ public class SketchNode extends SketchComponent{
     }
     @Override
     public void applyTranslation(int tx, int ty){
-        sketchComponents.forEach(sketch -> applyTranslation(tx, ty));
+        // sketchComponents.forEach(sketch -> applyTranslation(tx, ty)); Why does this lambda function fail, but manually iterating through succeeds?
+
+        Iterator<SketchComponent> iterator = sketchComponents.iterator();
+        while(iterator.hasNext()){
+            SketchComponent sketchComponent = iterator.next();
+            sketchComponent.applyTranslation(tx, ty);
+        }
     }
     @Override
     public int[] getBounds(){

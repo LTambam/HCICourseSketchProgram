@@ -95,6 +95,7 @@ public class ToolPane extends JPanel implements MenuConstants, ActionListener{
             default:
                 break;
         }
+        sf.p.repaint();
     }
     public JToggleButton createToggleToolbarButton(String s, JToolBar toToolBar, ButtonGroup toGroup, ActionListener al) {
         JToggleButton tmp = new JToggleButton(s);

@@ -108,6 +108,9 @@ public class ModeSelect implements Mode, MenuConstants{
                     }
                 }
             }
+        }else if(sf.moveCmd){
+            sf.state = 1;
+            sf.moveCmd=false;
         }else{
             sf.state = 0;
             Iterator<SketchComponent> it = sf.sketchAl.iterator();
@@ -143,7 +146,7 @@ public class ModeSelect implements Mode, MenuConstants{
                 Iterator<SketchComponent> it = sf.sketchAl.iterator();
                 while (it.hasNext()){
                     SketchComponent sg = it.next();
-                    sg.setSelected(true);
+                    sg.setSelected(false);
                 }
                 sf.state = 0;
             }

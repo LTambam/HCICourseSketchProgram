@@ -83,8 +83,13 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
         System.out.println("Free again");
     }
 
-    public void createAndPushCmd(String cmd, int index, SketchShape sketch){
+    public void createAndPushCmd(String cmd, int [] index, SketchComponent [] sketch){
+        undoCmdStack.clear(); // New command means they can't redo the previous undo anymore
         cmdStack.push(new SketchCmd(cmd, index, sketch));
+    }
+    public void createAndPushCmd(String cmd, int [] index, SketchComponent [] sketch, int tx, int ty){
+        undoCmdStack.clear(); // New command means they can't redo the previous undo anymore
+        cmdStack.push(new SketchCmd(cmd, index, sketch, tx, ty));
     }
     public void switchFocus(){
         p.requestFocusInWindow();
@@ -93,7 +98,7 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
         String cmdText = e.getActionCommand();
         switchFocus();
         System.out.println(cmdText);
-                
+
         switch (cmdText){
             case formatColor:
                 handleColorDialog();
@@ -114,7 +119,7 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
                 handlePaste();
                 break;
             case editDelete:
-                handleUndo();
+                handleDelete();
                 break; 
             case editMove:
                 handleMove();
@@ -213,11 +218,18 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
                     copyAl.add(sn);
                 }
             }
+            SketchComponent [] sc = new SketchComponent[copyAl.size()];
+            int [] idx = new int[copyAl.size()];
+            int i = 0;
             it = copyAl.iterator();
             while (it.hasNext()){
                 SketchComponent sn = it.next();
+                sc[i] = sn;
+                idx[i] = sketchAl.indexOf(sn);
                 sketchAl.remove(sn);
+                i++;
             }
+            createAndPushCmd(editCut, idx, sc);
         }
     }
     public void handleCopy(){
@@ -258,12 +270,24 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
         }
         System.out.println("New Top Left "+newtlPoint.x+" "+ newtlPoint.y);
 
+        int tx = newtlPoint.x-tlPoint.x;
+        int ty = newtlPoint.y-tlPoint.y;
+
+        SketchComponent [] sc = new SketchComponent[copyAl.size()];
+        int [] idx = new int[copyAl.size()];
+        int i = 0;
+    
         it = copyAl.iterator();
         while (it.hasNext()){
             SketchComponent sn = copySketchComponent(it.next());
-            sn.applyTranslation(newtlPoint.x-tlPoint.x, newtlPoint.y-tlPoint.y);
+            sn.applyTranslation(tx, ty);
             sketchAl.add(sn);
+            //these lines are for adding cmd to stack
+            sc[i] = sn;
+            idx[i] = sketchAl.size()-1;
+            i++;
         }
+        createAndPushCmd(editPaste, idx, sc);
     }
     public void handleDelete(){
         if(mode.getMode()==modeSelect && state==1){
@@ -274,11 +298,18 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
                     deleteAl.add(sn);
                 }
             }
+            SketchComponent [] sc = new SketchComponent[deleteAl.size()];
+            int [] idx = new int[deleteAl.size()];
+            int i = 0;
             it = deleteAl.iterator();
             while (it.hasNext()){
                 SketchComponent sn = it.next();
+                sc[i] = sn;
+                idx[i] = sketchAl.indexOf(sn);
                 sketchAl.remove(sn);
+                i++;
             }
+            createAndPushCmd(editDelete, idx, sc);
             deleteAl.clear();
         }
     }

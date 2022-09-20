@@ -6,7 +6,7 @@ import java.util.*;
 
 // so that each sketch can have mutliple sketchshapes within it.
 public class SketchNode extends SketchComponent{
-    Iterator<SketchComponent> iterator = null;
+    transient Iterator<SketchComponent> iterator = null;
     ArrayList<SketchComponent> sketchComponents = new ArrayList<SketchComponent>();
     Boolean isSelected;
 
@@ -110,5 +110,11 @@ public class SketchNode extends SketchComponent{
         }
         return iterator;
     }
-    
+    @Override
+    public Iterator<SketchComponent> createShallowIterator(){
+        if (iterator ==null){
+            iterator = sketchComponents.iterator();
+        }
+        return iterator;
+    }
 }

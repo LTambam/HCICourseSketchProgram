@@ -5,7 +5,7 @@ import java.util.*;
 
 public class SketchShape extends ArrayList<Point>{
     private Color color;
-    private Boolean isSelected;
+    private transient Boolean isSelected;
 
     public SketchShape(){
         color = Color.black;

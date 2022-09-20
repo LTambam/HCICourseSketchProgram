@@ -59,5 +59,9 @@ public class SketchLeaf extends SketchComponent{
     public Iterator<SketchComponent> createIterator(){
         return new NullIterator();
     }
+    @Override
+    public Iterator<SketchComponent> createShallowIterator(){
+        return new NullIterator();
+    }
     
 }

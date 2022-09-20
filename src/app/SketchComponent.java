@@ -39,4 +39,5 @@ public abstract class SketchComponent implements Serializable{
         throw new UnsupportedOperationException();
     }
     public abstract Iterator<SketchComponent> createIterator();
+    public abstract Iterator<SketchComponent> createShallowIterator();
 }

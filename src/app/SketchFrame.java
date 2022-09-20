@@ -313,7 +313,7 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
             deleteAl.clear();
         }
     }
-    public void handleMove(){ // move is not working with groups
+    public void handleMove(){
         if(mode.getMode()==modeSelect && state==1){
             moveCmd = true;
         }
@@ -330,11 +330,11 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
                     sn2.add(copySketchComponent(sn));
                 }
             }
+            System.out.println("Node Size: "+sn2.getGroupSize());
             it = deleteAl.iterator();
             while (it.hasNext()){
                 SketchComponent sn = it.next();
                 sketchAl.remove(sn);
-                System.out.println(sketchAl.size());
             }
             deleteAl.clear();
             sn2.setSelected(true);
@@ -345,19 +345,21 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
         if(mode.getMode()==modeSelect && state==1){
             Iterator<SketchComponent> it = sketchAl.iterator();
             SketchComponent sc = new SketchNode();
+            System.out.println("Size before: "+sketchAl.size());
             while (it.hasNext()){
                 SketchComponent sn = it.next();
                 if(sn.checkSelected() && sn.getSize()>1){
                     sc = sn;
                 }
             }
-            it = sc.createIterator();
+            it = sc.createShallowIterator();
             while(it.hasNext()){
                 SketchComponent sn = it.next();
                 sn.setSelected(true);
                 sketchAl.add(copySketchComponent(sn));
             }
-            sketchAl.remove(sc);
+            System.out.println(sketchAl.remove(sc));
+            System.out.println("Size after: "+sketchAl.size());
         }
     }
     public SketchComponent copySketchComponent(SketchComponent sc){ //serialize is not working with groups

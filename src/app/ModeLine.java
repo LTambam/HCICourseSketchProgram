@@ -35,11 +35,9 @@ public class ModeLine implements Mode, MenuConstants{
         SketchShape ss = sf.ss;
         SketchComponent sl = new SketchLeaf(ss);
         sf.sketchAl.add(sl);
-        SketchComponent [] sc = new SketchComponent[1];
-        sc[0] = sl;
-        int [] idx = new int[1];
-        idx[0] = sf.sketchAl.size()-1;
-        sf.createAndPushCmd(mode, idx, sc);
+        SketchCmd cmd = new SketchCmd(modeLine);
+        cmd.addComponent(sf.sketchAl.size()-1, sl);
+        sf.pushCmd(cmd);
         sf.startPoint=sf.currPoint;
         sf.ss = new SketchShape(sf.color);
         sf.ss.add(sf.startPoint);

@@ -51,14 +51,20 @@ public class ModeSelect implements Mode, MenuConstants{
                     int tx = (sf.currPoint.x-sf.prevPoint.x);
                     int ty = (sf.currPoint.y-sf.prevPoint.y);
 
+                    SketchCmd cmd = new SketchCmd(editMove, tx, ty);
+
+                    int i = 0;
                     Iterator<SketchComponent> it = sf.sketchAl.iterator();
                     while (it.hasNext()){
                         SketchComponent sg = it.next();
                         if(sg.checkSelected()){
                             sg.applyTranslation(tx, ty);
+                            cmd.addComponent(i, sg);
                         }
+                        i++;
                     }
                     sf.prevPoint = sf.currPoint;
+                    sf.pushCmd(cmd);
                 }
             }
         }else{

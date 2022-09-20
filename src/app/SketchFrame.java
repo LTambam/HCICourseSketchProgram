@@ -82,15 +82,6 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
         mode = new ModeFree(this);
         System.out.println("Free again");
     }
-
-    public void createAndPushCmd(String cmd, int [] index, SketchComponent [] sketch){
-        undoCmdStack.clear(); // New command means they can't redo the previous undo anymore
-        cmdStack.push(new SketchCmd(cmd, index, sketch));
-    }
-    public void createAndPushCmd(String cmd, int [] index, SketchComponent [] sketch, int tx, int ty){
-        undoCmdStack.clear(); // New command means they can't redo the previous undo anymore
-        cmdStack.push(new SketchCmd(cmd, index, sketch, tx, ty));
-    }
     public void switchFocus(){
         p.requestFocusInWindow();
     }
@@ -142,6 +133,10 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
         this.mode = mode;
         moveCmd = false;
         state = 0;
+    }
+    public void pushCmd(SketchCmd cmd){
+        undoCmdStack.clear();
+        cmdStack.push(cmd);
     }
     void handleColorDialog() {
         if (colorChooser == null){
@@ -218,18 +213,16 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
                     copyAl.add(sn);
                 }
             }
-            SketchComponent [] sc = new SketchComponent[copyAl.size()];
-            int [] idx = new int[copyAl.size()];
-            int i = 0;
+            SketchCmd cmd = new SketchCmd(editCut);
+            
             it = copyAl.iterator();
             while (it.hasNext()){
                 SketchComponent sn = it.next();
-                sc[i] = sn;
-                idx[i] = sketchAl.indexOf(sn);
+                cmd.addComponent(sketchAl.indexOf(sn), sn);
+                
                 sketchAl.remove(sn);
-                i++;
             }
-            createAndPushCmd(editCut, idx, sc);
+            pushCmd(cmd);
         }
     }
     public void handleCopy(){
@@ -273,21 +266,18 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
         int tx = newtlPoint.x-tlPoint.x;
         int ty = newtlPoint.y-tlPoint.y;
 
-        SketchComponent [] sc = new SketchComponent[copyAl.size()];
-        int [] idx = new int[copyAl.size()];
-        int i = 0;
+        SketchCmd cmd = new SketchCmd(editPaste);
     
         it = copyAl.iterator();
         while (it.hasNext()){
             SketchComponent sn = copySketchComponent(it.next());
             sn.applyTranslation(tx, ty);
             sketchAl.add(sn);
+            
             //these lines are for adding cmd to stack
-            sc[i] = sn;
-            idx[i] = sketchAl.size()-1;
-            i++;
+            cmd.addComponent(sketchAl.size()-1, sn);
         }
-        createAndPushCmd(editPaste, idx, sc);
+        pushCmd(cmd);
     }
     public void handleDelete(){
         if(mode.getMode()==modeSelect && state==1){
@@ -298,18 +288,15 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
                     deleteAl.add(sn);
                 }
             }
-            SketchComponent [] sc = new SketchComponent[deleteAl.size()];
-            int [] idx = new int[deleteAl.size()];
-            int i = 0;
+            SketchCmd cmd = new SketchCmd(editDelete);
+
             it = deleteAl.iterator();
             while (it.hasNext()){
                 SketchComponent sn = it.next();
-                sc[i] = sn;
-                idx[i] = sketchAl.indexOf(sn);
+                cmd.addComponent(sketchAl.indexOf(sn), sn);
                 sketchAl.remove(sn);
-                i++;
             }
-            createAndPushCmd(editDelete, idx, sc);
+            pushCmd(cmd);
             deleteAl.clear();
         }
     }
@@ -322,15 +309,20 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
         if(mode.getMode()==modeSelect && state==1){
             SketchNode sn2 = new SketchNode();
 
+            SketchCmd cmd = new SketchCmd(editGroup);
+
+            int i = 0;
             Iterator<SketchComponent> it = sketchAl.iterator();
             while (it.hasNext()){
                 SketchComponent sn = it.next();
                 if(sn.checkSelected()){
                     deleteAl.add(sn);
+                    cmd.addComponent(i, sn);
                     sn2.add(copySketchComponent(sn));
                 }
+                i++;
             }
-            System.out.println("Node Size: "+sn2.getGroupSize());
+
             it = deleteAl.iterator();
             while (it.hasNext()){
                 SketchComponent sn = it.next();
@@ -339,18 +331,25 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
             deleteAl.clear();
             sn2.setSelected(true);
             sketchAl.add(sn2);
+            pushCmd(cmd);
         }
     }
     public void handleUngroup(){
         if(mode.getMode()==modeSelect && state==1){
-            Iterator<SketchComponent> it = sketchAl.iterator();
+            
+            SketchCmd cmd = new SketchCmd(editUngroup);
+
             SketchComponent sc = new SketchNode();
-            System.out.println("Size before: "+sketchAl.size());
+
+            int i = 0;
+            Iterator<SketchComponent> it = sketchAl.iterator();
             while (it.hasNext()){
                 SketchComponent sn = it.next();
                 if(sn.checkSelected() && sn.getSize()>1){
                     sc = sn;
+                    cmd.addComponent(i, sc);
                 }
+                i++;
             }
             it = sc.createShallowIterator();
             while(it.hasNext()){
@@ -358,8 +357,6 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
                 sn.setSelected(true);
                 sketchAl.add(copySketchComponent(sn));
             }
-            System.out.println(sketchAl.remove(sc));
-            System.out.println("Size after: "+sketchAl.size());
         }
     }
     public SketchComponent copySketchComponent(SketchComponent sc){ //serialize is not working with groups

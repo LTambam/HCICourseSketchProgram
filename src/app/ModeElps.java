@@ -43,11 +43,9 @@ public class ModeElps implements Mode, MenuConstants {
         ss.setColor(sf.color);
         SketchComponent sl = new SketchLeaf(ss);
         sf.sketchAl.add(sl);
-        SketchComponent [] sc = new SketchComponent[1];
-        sc[0] = sl;
-        int [] idx = new int[1];
-        idx[0] = sf.sketchAl.size()-1;
-        sf.createAndPushCmd(mode, idx, sc);
+        SketchCmd cmd = new SketchCmd(modeElps);
+        cmd.addComponent(sf.sketchAl.size()-1, sl);
+        sf.pushCmd(cmd);
     }
     public void keyType(){
         sf.state=0;

@@ -1,0 +1,98 @@
+Date : 2022-09-13 16:31:01
+Directory : c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project
+Total : 65 files,  2392 codes, 1716 comments, 471 blanks, all 4579 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| Java     |         63 |      2,206 |      1,716 |        420 |      4,342 |
+| Log      |          1 |        176 |          0 |         42 |        218 |
+| Markdown |          1 |         10 |          0 |          9 |         19 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++-----------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                | files      | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                   |         65 |      2,392 |      1,716 |        471 |      4,579 |
+| bin                                                                                                 |         32 |        844 |          4 |          4 |        852 |
+| bin\Testing                                                                                         |          6 |        117 |          3 |          0 |        120 |
+| bin\app                                                                                             |         26 |        727 |          1 |          4 |        732 |
+| src                                                                                                 |         31 |      1,362 |      1,712 |        416 |      3,490 |
+| src\Start                                                                                           |          1 |          0 |        712 |        100 |        812 |
+| src\Testing                                                                                         |          5 |        101 |        687 |        138 |        926 |
+| src\app                                                                                             |         25 |      1,261 |        313 |        178 |      1,752 |
++-----------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-----------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                                                                            | language | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\README.md                          | Markdown |         10 |          0 |          9 |         19 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\bin\Testing\AwtAdapterDemo$1.class | Java     |         12 |          0 |          0 |         12 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\bin\Testing\AwtAdapterDemo$2.class | Java     |         15 |          3 |          0 |         18 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\bin\Testing\AwtAdapterDemo.class   | Java     |         39 |          0 |          0 |         39 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\bin\Testing\Example$1.class        | Java     |         14 |          0 |          0 |         14 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\bin\Testing\Example.class          | Java     |         31 |          0 |          0 |         31 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\bin\Testing\Test.class             | Java     |          6 |          0 |          0 |          6 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\bin\app\ArrayConverter.class       | Java     |         22 |          0 |          0 |         22 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\bin\app\CompositeIterator.class    | Java     |         15 |          1 |          0 |         16 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\bin\app\KeyEventAdapter.class      | Java     |         16 |          0 |          0 |         16 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\bin\app\LayoutUtils.class          | Java     |         42 |          0 |          0 |         42 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\bin\app\MenuConstants.class        | Java     |         12 |          0 |          0 |         12 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\bin\app\Mode.class                 | Java     |          6 |          0 |          0 |          6 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\bin\app\ModeCirc.class             | Java     |         26 |          0 |          0 |         26 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\bin\app\ModeElps.class             | Java     |         25 |          0 |          0 |         25 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\bin\app\ModeFree.class             | Java     |         27 |          0 |          0 |         27 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\bin\app\ModeLine.class             | Java     |         25 |          0 |          0 |         25 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\bin\app\ModeRect.class             | Java     |         25 |          0 |          0 |         25 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\bin\app\ModeSelect.class           | Java     |         41 |          0 |          0 |         41 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\bin\app\ModeSqre.class             | Java     |         26 |          0 |          0 |         26 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\bin\app\MouseEventAdapter.class    | Java     |         23 |          0 |          0 |         23 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\bin\app\NullIterator.class         | Java     |          9 |          0 |          0 |          9 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\bin\app\SketchCmd.class            | Java     |          9 |          0 |          0 |          9 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\bin\app\SketchComponent.class      | Java     |         28 |          0 |          0 |         28 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\bin\app\SketchFrame$1.class        | Java     |         11 |          0 |          0 |         11 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\bin\app\SketchFrame$2.class        | Java     |         10 |          0 |          0 |         10 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\bin\app\SketchFrame.class          | Java     |         98 |          0 |          1 |         99 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\bin\app\SketchLeaf.class           | Java     |         39 |          0 |          1 |         40 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\bin\app\SketchNode.class           | Java     |         42 |          0 |          1 |         43 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\bin\app\SketchPane.class           | Java     |         33 |          0 |          0 |         33 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\bin\app\SketchShape.class          | Java     |         24 |          0 |          1 |         25 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\bin\app\SketchyPad.class           | Java     |         20 |          0 |          0 |         20 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\bin\app\ToolPane.class             | Java     |         73 |          0 |          0 |         73 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\hs_err_pid1820.log                 | Log      |        176 |          0 |         42 |        218 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\src\Start\Saved.java               | Java     |          0 |        712 |        100 |        812 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\src\Testing\AwtAdapterDemo.java    | Java     |         54 |          0 |         11 |         65 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\src\Testing\Example.java           | Java     |         41 |          0 |          8 |         49 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\src\Testing\Notepad.java           | Java     |          1 |        582 |         84 |        667 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\src\Testing\PaintCanvas.java       | Java     |          0 |        105 |         29 |        134 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\src\Testing\Test.java              | Java     |          5 |          0 |          6 |         11 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\src\app\ArrayConverter.java        | Java     |         67 |          2 |          5 |         74 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\src\app\CompositeIterator.java     | Java     |         31 |          0 |          4 |         35 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\src\app\FileOperation.java         | Java     |          1 |        191 |         18 |        210 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\src\app\KeyEventAdapter.java       | Java     |         14 |          1 |          4 |         19 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\src\app\LayoutUtils.java           | Java     |         60 |          1 |          7 |         68 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\src\app\MenuConstants.java         | Java     |         30 |          0 |          7 |         37 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\src\app\Mode.java                  | Java     |         11 |          0 |          3 |         14 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\src\app\ModeCirc.java              | Java     |         46 |          0 |          6 |         52 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\src\app\ModeElps.java              | Java     |         45 |          0 |          6 |         51 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\src\app\ModeFree.java              | Java     |         42 |          3 |          4 |         49 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\src\app\ModeLine.java              | Java     |         44 |          0 |          3 |         47 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\src\app\ModeRect.java              | Java     |         44 |          0 |          4 |         48 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\src\app\ModeSelect.java            | Java     |        135 |          3 |          9 |        147 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\src\app\ModeSqre.java              | Java     |         45 |          0 |          6 |         51 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\src\app\MouseEventAdapter.java     | Java     |         30 |          4 |          5 |         39 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\src\app\NullIterator.java          | Java     |         10 |         10 |          6 |         26 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\src\app\SketchCmd.java             | Java     |         11 |          0 |          3 |         14 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\src\app\SketchComponent.java       | Java     |         33 |          0 |          3 |         36 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\src\app\SketchFrame.java           | Java     |        178 |         65 |         31 |        274 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\src\app\SketchLeaf.java            | Java     |         50 |          0 |          4 |         54 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\src\app\SketchNode.java            | Java     |         86 |          1 |          6 |         93 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\src\app\SketchPane.java            | Java     |         42 |          0 |          9 |         51 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\src\app\SketchShape.java           | Java     |         68 |          0 |          5 |         73 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\src\app\SketchyPad.java            | Java     |         12 |         18 |          7 |         37 |
+| c:\Users\luket\Desktop\Education\Masters\ECE9200\Project\Project\src\app\ToolPane.java              | Java     |        126 |         14 |         13 |        153 |
+| Total                                                                                               |          |      2,392 |      1,716 |        471 |      4,579 |
++-----------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+

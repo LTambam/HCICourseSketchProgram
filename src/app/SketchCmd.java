@@ -6,7 +6,7 @@ public class SketchCmd implements MenuConstants{
     String cmd;
     private ArrayList<Integer> indices;
     private ArrayList<SketchComponent> sketches;
-    private int tx, ty;
+    int tx, ty;
 
     SketchCmd(String cmd){
         this.cmd = cmd;
@@ -28,6 +28,9 @@ public class SketchCmd implements MenuConstants{
     public void addComponent(int idx, SketchComponent sketch){
         indices.add(idx);
         sketches.add(sketch);
+    }
+    public int size(){
+        return sketches.size();
     }
     public SketchComponent getComponent(int i){
         return sketches.get(i);

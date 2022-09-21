@@ -168,40 +168,105 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
     }
     public void handleUndo(){
         if (!cmdStack.isEmpty()){
-            SketchCmd tempSC = cmdStack.pop();
-            if(tempSC.cmd == modeSqre || tempSC.cmd == modeCirc || tempSC.cmd == modeRect || tempSC.cmd == modeElps || tempSC.cmd == modeLine || tempSC.cmd == modeFree){
+            SketchCmd sCmd = cmdStack.pop();
+            String cmd = sCmd.cmd;
+            if(cmd == modeSqre || cmd == modeCirc || cmd == modeRect || cmd == modeElps || cmd == modeLine || cmd == modeFree || cmd == editPaste){
                 // remove the item from the arraylist and add it to the undoCmdStack
-            }else if(tempSC.cmd == editPaste){
-                // remove the most recent item(s) from the list
-            }else if(tempSC.cmd == editDelete || tempSC.cmd == editCut){
+                for(int i=sCmd.size()-1; i>=0; i--){
+                    sketchAl.remove(sCmd.getComponentIdx(i));
+                }
+            }else if(cmd == editDelete || cmd == editCut){
                 // add back the deleted item(s)
-            }else if(tempSC.cmd == editMove){
+                for(int i=0; i<sCmd.size(); i++){
+                    sketchAl.add(sCmd.getComponentIdx(i), sCmd.getComponent(i));
+                }
+            }else if(cmd == editMove){
                 // return the moved item(s) to the original location
-            }else if(tempSC.cmd == editGroup){
+                int tx = sCmd.tx;
+                int ty = sCmd.ty;
+                for(int i=0; i<sCmd.size(); i++){
+                    sketchAl.get(sCmd.getComponentIdx(i)).applyTranslation(-tx, -ty);
+                }
+            }else if(cmd == editGroup){
                 // ungroup the items that were grouped
-            }else if(tempSC.cmd == editUngroup){
+                sketchAl.remove(sketchAl.size()-1);
+
+                for(int i=0; i<sCmd.size(); i++){
+                    sketchAl.add(sCmd.getComponentIdx(i), sCmd.getComponent(i));
+                }
+            }else if(cmd == editUngroup){
                 // group the items that were ungrouped
+                // group the items again
+                Boolean selFlag = true;
+                SketchComponent sc = new SketchNode();
+                sc = sCmd.getComponent(0);
+                for(int i=sc.getGroupSize(); i>0; i--){
+                    if (!sketchAl.get(sketchAl.size()-1).checkSelected()){
+                        selFlag=false;
+                    }
+                    sketchAl.remove(sketchAl.size()-1);
+                }
+                sc.setSelected(selFlag);
+                
+                sketchAl.add(sCmd.getComponentIdx(0), sc);
             }
-            undoCmdStack.push(tempSC);
+            undoCmdStack.push(sCmd);
         }
     }
     public void handleRedo(){
         if (!undoCmdStack.isEmpty()){
-            SketchCmd tempSC = undoCmdStack.pop();
-            if(tempSC.cmd == modeSqre || tempSC.cmd == modeCirc || tempSC.cmd == modeRect || tempSC.cmd == modeElps || tempSC.cmd == modeLine || tempSC.cmd == modeFree){
+            SketchCmd sCmd = undoCmdStack.pop();
+            String cmd = sCmd.cmd;
+            if(cmd == modeSqre || cmd == modeCirc || cmd == modeRect || cmd == modeElps || cmd == modeLine || cmd == modeFree || cmd == editPaste){
                 // add back the item from the undoCmdStack to the arraylist and the cmdStack
-            }else if(tempSC.cmd == editPaste){
-                // add back item(s)
-            }else if(tempSC.cmd == editDelete || tempSC.cmd == editCut){
+                for(int i=0; i<sCmd.size(); i++){
+                    sketchAl.add(sCmd.getComponentIdx(i), sCmd.getComponent(i));
+                }
+            }else if(cmd == editDelete || cmd == editCut){
                 // delete item(s)
-            }else if(tempSC.cmd == editMove){
+                for(int i=sCmd.size()-1; i>=0; i--){
+                    sketchAl.remove(sCmd.getComponentIdx(i));
+                }
+            }else if(cmd == editMove){
                 // move item(s) again
-            }else if(tempSC.cmd == editGroup){
+                int tx = sCmd.tx;
+                int ty = sCmd.ty;
+                for(int i=0; i<sCmd.size(); i++){
+                    sketchAl.get(sCmd.getComponentIdx(i)).applyTranslation(tx, ty);
+                }
+            }else if(cmd == editGroup){
                 // group the items again
-            }else if(tempSC.cmd == editUngroup){
+                Boolean selFlag = true;
+                SketchComponent sc = new SketchNode();
+                for(int i=sCmd.size()-1; i>=0; i--){
+                    if (!sketchAl.get(sCmd.getComponentIdx(i)).checkSelected()){
+                        selFlag=false;
+                    }
+                    sketchAl.remove(sCmd.getComponentIdx(i));
+                }
+                for (int i=0; i<sCmd.size(); i++){
+                    sc.add(sCmd.getComponent(i));
+                }
+                if (selFlag){
+                    sc.setSelected(true);
+                }
+                sketchAl.add(sc);
+            }else if(cmd == editUngroup){
                 // ungroup the items again
+                SketchComponent sc = new SketchNode();
+                int idx = sCmd.getComponentIdx(0);
+                sc = sketchAl.get(idx);
+                Boolean selFlag = sc.checkSelected();
+
+                Iterator<SketchComponent> it = sc.createShallowIterator();
+                while(it.hasNext()){
+                    SketchComponent sn = it.next();
+                    sn.setSelected(selFlag);
+                    sketchAl.add(copySketchComponent(sn));
+                }
+                sketchAl.remove(idx);
             }
-            cmdStack.push(tempSC);
+            cmdStack.push(sCmd);
         }
     }
     public void handleCut(){
@@ -237,7 +302,7 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
             }
         }
     }
-    public void handlePaste(){ // move is not working with groups
+    public void handlePaste(){
         SketchNode tmpNode = new SketchNode();
 
         Iterator<SketchComponent> it = copyAl.iterator();
@@ -357,9 +422,11 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
                 sn.setSelected(true);
                 sketchAl.add(copySketchComponent(sn));
             }
+            sketchAl.remove(sc);
+            pushCmd(cmd);
         }
     }
-    public SketchComponent copySketchComponent(SketchComponent sc){ //serialize is not working with groups
+    public SketchComponent copySketchComponent(SketchComponent sc){
         SketchComponent clone = null;
         try {
             // Create a byte array output stream

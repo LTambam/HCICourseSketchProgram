@@ -25,6 +25,8 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
     JDialog colorDialog = null;
     Color color = Color.black;
 
+    FileOperation fileHandler;
+
     Mode mode;
 
     public ArrayList<SketchComponent> sketchAl = new ArrayList<SketchComponent>();
@@ -40,6 +42,8 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
 
     SketchFrame(String title, SketchyPad sp){
         super(title);
+
+        fileHandler = new FileOperation(this);
 
         this.sp = sp;
 
@@ -68,8 +72,9 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
 
         WindowListener frameClose = new WindowAdapter() {
             public void windowClosing(WindowEvent we) {
-                // if (fileHandler.confirmSave())
-                System.exit(0);
+                if (fileHandler.confirmSave()){
+                    System.exit(0);
+                }
             }
         };
         addWindowListener(frameClose);
@@ -80,7 +85,6 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
         setVisible(true);
 
         mode = new ModeFree(this);
-        System.out.println("Free again");
     }
     public void switchFocus(){
         p.requestFocusInWindow();
@@ -88,45 +92,28 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
     public void actionPerformed(ActionEvent e) {
         String cmdText = e.getActionCommand();
         switchFocus();
-        System.out.println(cmdText);
 
+        System.out.println(cmdText);
         switch (cmdText){
-            case formatColor:
-                handleColorDialog();
-                break; 
-            case editUndo:
-                handleUndo();
-                break; 
-            case editRedo:
-                handleRedo();
-                break;
-            case editCut:
-                handleCut();
-                break; 
-            case editCopy:
-                handleCopy();
-                break;
-            case editPaste:
-                handlePaste();
-                break;
-            case editDelete:
-                handleDelete();
-                break; 
-            case editMove:
-                handleMove();
-                break; 
-            case editGroup:
-                handleGroup();
-                break; 
-            case editUngroup:
-                handleUngroup();
-                break; 
-            case editSelectAll:
-                handleSelectAll();
-                break; 
-            default:
-                break;
-        }
+            case fileNew        -> handleNew();
+            case fileOpen       -> handleOpen();
+            case fileSave       -> handleSave();
+            case fileSaveAs     -> handleSaveAs();
+            case fileExit       -> handleExit();
+            case fileExport     -> handleExport();
+            case formatColor    -> handleColorDialog();
+            case editUndo       -> handleUndo();
+            case editRedo       -> handleRedo();
+            case editCut        -> handleCut();
+            case editCopy       -> handleCopy();
+            case editPaste      -> handlePaste();
+            case editDelete     -> handleDelete();
+            case editMove       -> handleMove();
+            case editGroup      -> handleGroup();
+            case editUngroup    -> handleUngroup();
+            case editSelectAll  -> handleSelectAll();
+            default             -> throw new IllegalStateException("Invalid Command");
+        };
         p.repaint();
     }
     void changeMode(Mode mode){
@@ -137,6 +124,24 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
     public void pushCmd(SketchCmd cmd){
         undoCmdStack.clear();
         cmdStack.push(cmd);
+    }
+    void handleNew(){
+
+    }
+    void handleOpen(){
+
+    }
+    void handleSave(){
+
+    }
+    void handleSaveAs(){
+
+    }
+    void handleExit(){
+
+    }
+    void handleExport(){
+
     }
     void handleColorDialog() {
         if (colorChooser == null){
@@ -158,7 +163,7 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
     }
     void handleSelectAll(){
         changeMode(new ModeSelect(this));
-        tbp.setSelBtn(true);           
+        tbp.setSelBtn(true);
         state = 1;
         Iterator<SketchComponent> it = sketchAl.iterator();
         while (it.hasNext()){
@@ -175,7 +180,7 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
                 for(int i=sCmd.size()-1; i>=0; i--){
                     sketchAl.remove(sCmd.getComponentIdx(i));
                 }
-            }else if(cmd == editDelete || cmd == editCut){
+            }else if(cmd == editDelete || cmd == editCut){// issue with undo on groups after cut command
                 // add back the deleted item(s)
                 for(int i=0; i<sCmd.size(); i++){
                     sketchAl.add(sCmd.getComponentIdx(i), sCmd.getComponent(i));

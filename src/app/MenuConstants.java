@@ -3,12 +3,12 @@ package app;
 interface MenuConstants {
     final String fileText = "File";
     final String editText = "Edit";
-    final String formatText = "Format";
 
     final String fileNew = "New";
     final String fileOpen = "Open...";
     final String fileSave = "Save";
     final String fileSaveAs = "Save As...";
+    final String fileExport = "Export as Image";
     final String fileExit = "Exit";
 
     final String editUndo = "Undo";
@@ -32,5 +32,5 @@ interface MenuConstants {
     final String modeCirc = "Circle";
     final String modeSelect = "Select";
 
-    final String aboutText = "Your SketchFrame";
+    // final String aboutText = "Your SketchFrame";
 }

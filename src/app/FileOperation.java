@@ -4,10 +4,13 @@ import java.io.*;
 import java.util.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.filechooser.*;
 
 class FileOperation {
     SketchFrame sf;
 
+
+    final String sypExt = "syp";
     boolean saved;
     boolean newFileFlag;
     String fileName;
@@ -62,18 +65,25 @@ class FileOperation {
         }
         return saveAsFile();
     }
+    public String addExtensionToFileName(String fileName){
+        return String.join(".", fileName, sypExt);
+    }
+    public String removeExtensionOfFileName(String fileName){
+        return fileName.split(".")[0];
+    }
     boolean saveAsFile() {
         File temp = null;
+        
         chooser.setDialogTitle("Save As...");
         chooser.setApproveButtonText("Save Now");
         chooser.setApproveButtonMnemonic(KeyEvent.VK_S);
         chooser.setApproveButtonToolTipText("Click me to save!");
 
-        do {
+        while(true){
             if (chooser.showSaveDialog(this.sf) != JFileChooser.APPROVE_OPTION){
                 return false;
             }
-            temp = chooser.getSelectedFile();
+            temp = new File(addExtensionToFileName(chooser.getSelectedFile().getPath()));
             if (!temp.exists()){
                 break;
             }
@@ -81,7 +91,7 @@ class FileOperation {
                     "Save As", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
                 break;
             }
-        } while (true);
+        }
         return saveFile(temp);
     }
     boolean openFile(File temp) {
@@ -116,13 +126,19 @@ class FileOperation {
         if (!confirmSave()){
             return;
         }
+
+        JFileChooser chooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("SketchyPad File", sypExt);
+        chooser.setFileFilter(filter);
+        chooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
         chooser.setDialogTitle("Open File...");
         chooser.setApproveButtonText("Open this");
         chooser.setApproveButtonMnemonic(KeyEvent.VK_O);
         chooser.setApproveButtonToolTipText("Click me to open the selected file.!");
 
         File temp = null;
-        do {
+        while(true)
+        {
             if (chooser.showOpenDialog(this.sf) != JFileChooser.APPROVE_OPTION){
                 return;
             }
@@ -135,8 +151,8 @@ class FileOperation {
                             "Please verify the correct file name was given.<html>",
                             "Open", JOptionPane.INFORMATION_MESSAGE);
 
-        } while (true);
-        // this.sfd.ta.setText("");
+        }
+        sf.clearAll();
         if (!openFile(temp)) {
             fileName = "Untitled";
             saved = true;
@@ -182,10 +198,55 @@ class FileOperation {
         if (!confirmSave()){
             return;
         }
-        fileName = new String("Untitled");
+        sf.clearAll();
+        fileName = addExtensionToFileName(new String("Untitled"));
         fileRef = new File(fileName);
         saved = true;
         newFileFlag = true;
         this.sf.setTitle(fileName + " - " + applicationTitle);
+    }
+    boolean exportFile(File temp) {
+        try {
+            FileOutputStream fos = new FileOutputStream(temp);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+
+            oos.writeObject(sf.sketchAl);
+            oos.close();
+        }
+        catch (IOException e) {
+            updateStatus(temp, false);
+            e.printStackTrace();
+            return false;
+        }
+        updateStatus(temp, true);
+        return true;
+    }
+    boolean exportFile(){
+        int ppi = 300;
+
+        File temp = new File(removeExtensionOfFileName(fileRef.getPath()));
+        
+        chooser.setDialogTitle("Export As...");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("JPEG File, PNG File", "JPEG", "jpg", "PNG", "png");
+        chooser.setFileFilter(filter);
+        chooser.setApproveButtonText("Export Now");
+        chooser.setApproveButtonMnemonic(KeyEvent.VK_S);
+        chooser.setApproveButtonToolTipText("Click me to export!");
+
+        while(true){
+            if (chooser.showSaveDialog(this.sf) != JFileChooser.APPROVE_OPTION){
+                return false;
+            }
+            temp = new File(addExtensionToFileName(chooser.getSelectedFile().getPath()));
+            if (!temp.exists()){
+                break;
+            }
+            if (JOptionPane.showConfirmDialog(this.sf, "<html>" + temp.getPath() + " already exists.<br>Do you want to replace it?<html>",
+                    "Save As", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
+                break;
+            }
+        }
+        return exportFile(temp);
+        
     }
 }

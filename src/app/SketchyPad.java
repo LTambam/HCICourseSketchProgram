@@ -2,14 +2,14 @@ package app;
 
 /*
  * Features to add:
- * - drag to move
+ * - export as image
  * - box select
  * - make line add a group of lines instead of many individual lines
- * - undo and redo
+ * - enforce a file type?
  * Things I need to fix:
- * - come up with a strict rule for ungrouping and grouping index in SketchAL. Implement.
+ * - figure out why there are additional cmds to undo and redo
  * - enforce maximum stack size
- * 
+ * - change color of objects after the fact
  */
 
 public class SketchyPad implements MenuConstants {
@@ -72,19 +72,4 @@ public class SketchyPad implements MenuConstants {
  * Requirements: Need to know index of objects in sketchAL list, both the group and the original locations.
  */
 
-// ////////////////////////////////////
-        // if (cmdText.equals(fileNew))
-        // fileHandler.newFile();
-        // else if (cmdText.equals(fileOpen))
-        // fileHandler.openFile();
-        // ////////////////////////////////////
-        // else if (cmdText.equals(fileSave))
-        // fileHandler.saveThisFile();
-        // ////////////////////////////////////
-        // else if (cmdText.equals(fileSaveAs))
-        // fileHandler.saveAsFile();
-        // ////////////////////////////////////
-        // else if (cmdText.equals(fileExit)) {
-        // if (fileHandler.confirmSave())
-        // System.exit(0);
-        // }
+ 

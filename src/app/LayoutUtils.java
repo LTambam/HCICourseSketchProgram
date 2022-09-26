@@ -42,8 +42,8 @@ public class LayoutUtils implements MenuConstants {
         JMenu fileMenu = createMenu(fileText, mb);
         JMenu editMenu = createMenu(editText, mb);
         
-        createMenuItem(fileOpen, mb, KeyEvent.VK_O, sf);
-        createMenuItem(fileSave, mb, KeyEvent.VK_S, sf);
+        // createMenuItem(fileOpen, mb, KeyEvent.VK_O, sf);
+        // createMenuItem(fileSave, mb, KeyEvent.VK_S, sf);
         createMenuItem(fileOpen, fileMenu, KeyEvent.VK_O, sf);
         createMenuItem(fileSave, fileMenu, KeyEvent.VK_S, sf);
         createMenuItem(fileNew, fileMenu, sf);

@@ -87,6 +87,14 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
 
         mode = new ModeFree(this);
     }
+    public void clearAll(){
+        state = 0;
+        sketchAl.clear();
+        copyAl.clear();
+        deleteAl.clear();
+        cmdStack.clear();
+        undoCmdStack.clear();
+    }
     public void switchFocus(){
         p.requestFocusInWindow();
     }
@@ -127,22 +135,25 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
         cmdStack.push(cmd);
     }
     void handleNew(){
-
+        fileHandler.newFile();
     }
     void handleOpen(){
-
+        fileHandler.openFile();
     }
     void handleSave(){
-
+        fileHandler.saveThisFile();
     }
     void handleSaveAs(){
-
+        fileHandler.saveAsFile();
     }
     void handleExit(){
-
+        if (fileHandler.confirmSave())
+        {
+            System.exit(0);
+        }
     }
     void handleExport(){
-
+        fileHandler.exportFile();
     }
     void handleColorDialog() {
         if (colorChooser == null){

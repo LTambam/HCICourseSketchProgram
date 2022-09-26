@@ -9,5 +9,8 @@ interface Mode {
     void mouseMove(MouseEvent e);
     void mouseClickS0(MouseEvent e);
     void mouseClickS1(MouseEvent e);
+    void mousePress(MouseEvent e);
+    void mouseDrag(MouseEvent e);
+    void mouseRelease(MouseEvent e);
     void keyType();
 }

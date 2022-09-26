@@ -106,6 +106,7 @@ class FileOperation {
                 ois.close();
                 fis.close();
             } catch (IOException e) {
+                
             }
         }
         updateStatus(temp, true);
@@ -126,7 +127,6 @@ class FileOperation {
                 return;
             }
             temp = chooser.getSelectedFile();
-
             if (temp.exists()){
                 break;
             }
@@ -169,10 +169,12 @@ class FileOperation {
             int x = JOptionPane.showConfirmDialog(this.sf, strMsg, applicationTitle,
                     JOptionPane.YES_NO_CANCEL_OPTION);
 
-            if (x == JOptionPane.CANCEL_OPTION)
+            if (x == JOptionPane.CANCEL_OPTION){
                 return false;
-            if (x == JOptionPane.YES_OPTION && !saveAsFile())
+            }
+            if (x == JOptionPane.YES_OPTION && !saveAsFile()){
                 return false;
+            }
         }
         return true;
     }

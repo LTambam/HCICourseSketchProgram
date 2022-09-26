@@ -47,6 +47,15 @@ public class ModeFree implements Mode, MenuConstants {
         cmd.addComponent(sf.sketchAl.size()-1, sl);
         sf.pushCmd(cmd);
     }
+    public void mousePress(MouseEvent e){
+        
+    }
+    public void mouseDrag(MouseEvent e){
+
+    }
+    public void mouseRelease(MouseEvent e){
+        
+    }
     public void keyType(){
         sf.state=0;
     }

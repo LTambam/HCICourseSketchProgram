@@ -12,6 +12,7 @@ import java.io.*;
 public class SketchFrame extends JFrame implements ActionListener, MenuConstants{
     SketchyPad sp;
     int state = 0;
+    Boolean pressedOnSketch = false;
     int cursor = Cursor.DEFAULT_CURSOR;
     boolean moveCmd = false;
 
@@ -183,6 +184,7 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
             }else if(cmd == editDelete || cmd == editCut){// issue with undo on groups after cut command
                 // add back the deleted item(s)
                 for(int i=0; i<sCmd.size(); i++){
+                    System.out.println(sCmd.getComponentIdx(i));
                     sketchAl.add(sCmd.getComponentIdx(i), sCmd.getComponent(i));
                 }
             }else if(cmd == editMove){
@@ -201,19 +203,19 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
                 }
             }else if(cmd == editUngroup){
                 // group the items that were ungrouped
-                // group the items again
-                Boolean selFlag = true;
-                SketchComponent sc = new SketchNode();
-                sc = sCmd.getComponent(0);
-                for(int i=sc.getGroupSize(); i>0; i--){
-                    if (!sketchAl.get(sketchAl.size()-1).checkSelected()){
-                        selFlag=false;
+                for(int i = 0; i<sCmd.size(); i++){
+                    Boolean selFlag = true;
+                    SketchComponent sc = sCmd.getComponent(i);
+                    int idx = sCmd.getComponentIdx(i);
+                    for(int j=sc.getGroupSize(); j>0; j--){
+                        if (!sketchAl.get(sketchAl.size()-1).checkSelected()){
+                            selFlag=false;
+                        }
+                        sketchAl.remove(sketchAl.size()-1);
                     }
-                    sketchAl.remove(sketchAl.size()-1);
+                    sc.setSelected(selFlag);
+                    sketchAl.add(idx, sc);
                 }
-                sc.setSelected(selFlag);
-                
-                sketchAl.add(sCmd.getComponentIdx(0), sc);
             }
             undoCmdStack.push(sCmd);
         }
@@ -258,38 +260,36 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
                 sketchAl.add(sc);
             }else if(cmd == editUngroup){
                 // ungroup the items again
-                SketchComponent sc = new SketchNode();
-                int idx = sCmd.getComponentIdx(0);
-                sc = sketchAl.get(idx);
-                Boolean selFlag = sc.checkSelected();
+                for(int i = 0; i<sCmd.size(); i++){
+                    SketchComponent sc = sCmd.getComponent(i);
+                    int idx = sCmd.getComponentIdx(i);
+                    Boolean selFlag =  sketchAl.get(idx).checkSelected();
 
-                Iterator<SketchComponent> it = sc.createShallowIterator();
-                while(it.hasNext()){
-                    SketchComponent sn = it.next();
-                    sn.setSelected(selFlag);
-                    sketchAl.add(copySketchComponent(sn));
+                    Iterator<SketchComponent> it = sc.createShallowIterator();
+                    while(it.hasNext()){
+                        SketchComponent sn = it.next();
+                        sn.setSelected(selFlag);
+                        sketchAl.add(copySketchComponent(sn));
+                    }
+                    sketchAl.remove(idx);
                 }
-                sketchAl.remove(idx);
             }
             cmdStack.push(sCmd);
         }
     }
     public void handleCut(){
         if(mode.getMode()==modeSelect && state==1){
-            Iterator<SketchComponent> it = sketchAl.iterator();
-            while (it.hasNext()){
-                SketchComponent sn = it.next();
+            for(int i=0; i < sketchAl.size(); i++){
+                SketchComponent sn = sketchAl.get(i);
                 if(sn.checkSelected()){
                     copyAl.add(sn);
                 }
             }
             SketchCmd cmd = new SketchCmd(editCut);
             
-            it = copyAl.iterator();
-            while (it.hasNext()){
-                SketchComponent sn = it.next();
-                cmd.addComponent(sketchAl.indexOf(sn), sn);
-                
+            for(int i=0; i < copyAl.size(); i++){
+                SketchComponent sn = copyAl.get(i);
+                cmd.addComponent(i, sn);
                 sketchAl.remove(sn);
             }
             pushCmd(cmd);
@@ -298,9 +298,8 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
     public void handleCopy(){
         copyAl.clear();
         if(mode.getMode()==modeSelect && state==1){
-            Iterator<SketchComponent> it = sketchAl.iterator();
-            while (it.hasNext()){
-                SketchComponent sn = it.next();
+            for(int i=0; i < sketchAl.size(); i++){
+                SketchComponent sn = sketchAl.get(i);
                 if(sn.checkSelected()){
                     copyAl.add(copySketchComponent(sn));
                 }
@@ -310,9 +309,8 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
     public void handlePaste(){
         SketchNode tmpNode = new SketchNode();
 
-        Iterator<SketchComponent> it = copyAl.iterator();
-        while (it.hasNext()){
-            SketchComponent sn = it.next();
+        for(int i=0; i < copyAl.size(); i++){
+            SketchComponent sn = copyAl.get(i);
             tmpNode.add(copySketchComponent(sn));
         }
 
@@ -338,32 +336,27 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
 
         SketchCmd cmd = new SketchCmd(editPaste);
     
-        it = copyAl.iterator();
-        while (it.hasNext()){
-            SketchComponent sn = copySketchComponent(it.next());
+        for(int i=0; i < copyAl.size(); i++){
+            SketchComponent sn = copySketchComponent(copyAl.get(i));
             sn.applyTranslation(tx, ty);
             sketchAl.add(sn);
-            
-            //these lines are for adding cmd to stack
             cmd.addComponent(sketchAl.size()-1, sn);
         }
         pushCmd(cmd);
     }
     public void handleDelete(){
         if(mode.getMode()==modeSelect && state==1){
-            Iterator<SketchComponent> it = sketchAl.iterator();
-            while (it.hasNext()){
-                SketchComponent sn = it.next();
+            for(int i=0; i < sketchAl.size(); i++){
+                SketchComponent sn = sketchAl.get(i);
                 if(sn.checkSelected()){
                     deleteAl.add(sn);
                 }
             }
             SketchCmd cmd = new SketchCmd(editDelete);
 
-            it = deleteAl.iterator();
-            while (it.hasNext()){
-                SketchComponent sn = it.next();
-                cmd.addComponent(sketchAl.indexOf(sn), sn);
+            for(int i=0; i < deleteAl.size(); i++){
+                SketchComponent sn = deleteAl.get(i);
+                cmd.addComponent(i, sn);
                 sketchAl.remove(sn);
             }
             pushCmd(cmd);
@@ -381,21 +374,16 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
 
             SketchCmd cmd = new SketchCmd(editGroup);
 
-            int i = 0;
-            Iterator<SketchComponent> it = sketchAl.iterator();
-            while (it.hasNext()){
-                SketchComponent sn = it.next();
+            for(int i=0; i < sketchAl.size(); i++){
+                SketchComponent sn = sketchAl.get(i);
                 if(sn.checkSelected()){
                     deleteAl.add(sn);
                     cmd.addComponent(i, sn);
                     sn2.add(copySketchComponent(sn));
                 }
-                i++;
             }
-
-            it = deleteAl.iterator();
-            while (it.hasNext()){
-                SketchComponent sn = it.next();
+            for(int i=0; i < deleteAl.size(); i++){
+                SketchComponent sn = deleteAl.get(i);
                 sketchAl.remove(sn);
             }
             deleteAl.clear();
@@ -406,29 +394,28 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
     }
     public void handleUngroup(){
         if(mode.getMode()==modeSelect && state==1){
-            
             SketchCmd cmd = new SketchCmd(editUngroup);
+            int sz = sketchAl.size();
 
-            SketchComponent sc = new SketchNode();
-
-            int i = 0;
-            Iterator<SketchComponent> it = sketchAl.iterator();
-            while (it.hasNext()){
-                SketchComponent sn = it.next();
+            for(int i=0; i<sz; i++){
+                System.out.println(sketchAl.size());
+                SketchComponent sn = sketchAl.get(i);
                 if(sn.checkSelected() && sn.getSize()>1){
-                    sc = sn;
-                    cmd.addComponent(i, sc);
+                    cmd.addComponent(i, copySketchComponent(sn));
+                    Iterator<SketchComponent> it2 = sn.createShallowIterator();
+                    while(it2.hasNext()){
+                        SketchComponent sn2 = copySketchComponent(it2.next());
+                        sn2.setSelected(true);
+                        sketchAl.add(sn2);
+                    }
                 }
-                i++;
             }
-            it = sc.createShallowIterator();
-            while(it.hasNext()){
-                SketchComponent sn = it.next();
-                sn.setSelected(true);
-                sketchAl.add(copySketchComponent(sn));
-            }
-            sketchAl.remove(sc);
             pushCmd(cmd);
+            for(int j=0; j<cmd.size(); j++){
+                sketchAl.remove(cmd.getComponentIdx(j));
+            }
+            
+            
         }
     }
     public SketchComponent copySketchComponent(SketchComponent sc){

@@ -96,7 +96,7 @@ public class ModeSelect implements Mode, MenuConstants{
     public void mouseClickS1(MouseEvent e){
         // need to add functionality
 
-        if(e.isControlDown()&& !sf.moveCmd){
+        if(e.isControlDown() && !sf.moveCmd){
             sf.state = 1;
             Iterator<SketchComponent> it = sf.sketchAl.iterator();
             while (it.hasNext()){
@@ -122,7 +122,7 @@ public class ModeSelect implements Mode, MenuConstants{
             while (it.hasNext()){
                 SketchComponent sg = it.next();
                 if(sg.checkSelected()){
-                    cmd.addComponent(i, sg);
+                    cmd.addComponent(i, sf.copySketchComponent(sg));
                 }
                 i++;
             }
@@ -141,6 +141,58 @@ public class ModeSelect implements Mode, MenuConstants{
             }
             sf.moveCmd=false;
         }
+    }
+    public void mousePress(MouseEvent e){
+        if(!e.isControlDown()){
+            Iterator<SketchComponent> it = sf.sketchAl.iterator();
+            while (it.hasNext()){
+                SketchComponent sg = it.next();
+                if(sg.checkHovering(sf.startPoint, SketchFrame.sel_thr)){
+                    sf.pressedOnSketch = true;
+                    sg.setSelected(true);
+                    sf.state = 1;
+                }else{
+                    sg.setSelected(false);
+                }
+            }
+        }
+    }
+    public void mouseDrag(MouseEvent e){
+        sf.currPoint = e.getPoint();
+        if (sf.currPoint != sf.prevPoint){
+            int tx = (sf.currPoint.x-sf.prevPoint.x);
+            int ty = (sf.currPoint.y-sf.prevPoint.y);
+
+            Iterator<SketchComponent> it = sf.sketchAl.iterator();
+            while (it.hasNext()){
+                SketchComponent sg = it.next();
+                if(sg.checkSelected()){
+                    sg.applyTranslation(tx, ty);
+                }
+            }
+            sf.prevPoint = sf.currPoint;
+        }
+    }
+    public void mouseRelease(MouseEvent e){
+        sf.state = 1;
+        sf.moveCmd=false;
+
+        int tx = sf.currPoint.x-sf.startPoint.x;
+        int ty = sf.currPoint.y-sf.startPoint.y;
+        SketchCmd cmd = new SketchCmd(editMove, tx, ty);
+
+        int i = 0;
+        Iterator<SketchComponent> it = sf.sketchAl.iterator();
+        while (it.hasNext()){
+            SketchComponent sg = it.next();
+            if(sg.checkSelected()){
+                cmd.addComponent(i, sf.copySketchComponent(sg));
+            }
+            i++;
+        }
+        sf.pushCmd(cmd);
+
+        sf.pressedOnSketch = false;
     }
     public void keyType(){
         System.out.println("esc pressed while in select");

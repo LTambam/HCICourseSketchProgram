@@ -40,10 +40,9 @@ public class SketchPane extends JPanel implements MenuConstants {
         Graphics2D g2d = (Graphics2D) g.create();
         
         Iterator<SketchComponent> it = sf.sketchAl.iterator();
-
         while (it.hasNext()){
-            SketchComponent sg = it.next();
-            sg.paintComponent(g2d);
+            SketchComponent sc = it.next();
+            sc.paintComponent(g2d);
         }
         if (sf.state == 1){
             g2d.setColor(sf.color);

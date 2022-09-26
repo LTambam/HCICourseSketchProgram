@@ -43,6 +43,15 @@ public class ModeLine implements Mode, MenuConstants{
         sf.ss.add(sf.startPoint);
         sf.state=1;        
     }
+    public void mousePress(MouseEvent e){
+        
+    }
+    public void mouseDrag(MouseEvent e){
+
+    }
+    public void mouseRelease(MouseEvent e){
+        
+    }
     public void keyType(){
         sf.state=0;
     }

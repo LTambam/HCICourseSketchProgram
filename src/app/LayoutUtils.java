@@ -48,6 +48,7 @@ public class LayoutUtils implements MenuConstants {
         createMenuItem(fileSave, fileMenu, KeyEvent.VK_S, sf);
         createMenuItem(fileNew, fileMenu, sf);
         createMenuItem(fileSaveAs, fileMenu, sf);
+        createMenuItem(fileExport, fileMenu, sf);
         fileMenu.addSeparator();
         createMenuItem(fileExit, fileMenu, sf);
         

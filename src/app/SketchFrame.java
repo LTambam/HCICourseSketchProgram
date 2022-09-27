@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.awt.geom.Ellipse2D.Double;
 import java.io.*;
+import java.awt.image.*;
 
 // try the toolbar instead of the menubar for performing certain operations.
 
@@ -153,7 +154,7 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
         }
     }
     void handleExport(){
-        fileHandler.exportFile();
+        fileHandler.exportThisFile();
     }
     void handleColorDialog() {
         if (colorChooser == null){
@@ -463,5 +464,13 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
             e.printStackTrace();
         }
         return clone;
+    }
+    public BufferedImage createImage(){
+        int w = p.getWidth();
+        int h = p.getHeight();
+        BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = bi.createGraphics();
+        p.paint(g);
+        return bi;
     }
 }

@@ -2,7 +2,6 @@ package app;
 
 /*
  * Features to add:
- * - export as image
  * - box select
  * - make line add a group of lines instead of many individual lines
  * - enforce a file type?

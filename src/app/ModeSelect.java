@@ -15,6 +15,7 @@ public class ModeSelect implements Mode, MenuConstants{
                     10.0f, dash1, 0.0f);
     
     public boolean moveCmd = false;
+    private float move_thr = 20.0f;
 
     ModeSelect(SketchFrame sf){
         this.sf = sf;
@@ -179,18 +180,28 @@ public class ModeSelect implements Mode, MenuConstants{
 
         int tx = sf.currPoint.x-sf.startPoint.x;
         int ty = sf.currPoint.y-sf.startPoint.y;
-        SketchCmd cmd = new SketchCmd(editMove, tx, ty);
+        if (tx > move_thr || ty > move_thr){
+            SketchCmd cmd = new SketchCmd(editMove, tx, ty);
 
-        int i = 0;
-        Iterator<SketchComponent> it = sf.sketchAl.iterator();
-        while (it.hasNext()){
-            SketchComponent sg = it.next();
-            if(sg.checkSelected()){
-                cmd.addComponent(i, sf.copySketchComponent(sg));
+            int i = 0;
+            Iterator<SketchComponent> it = sf.sketchAl.iterator();
+            while (it.hasNext()){
+                SketchComponent sg = it.next();
+                if(sg.checkSelected()){
+                    cmd.addComponent(i, sf.copySketchComponent(sg));
+                }
+                i++;
             }
-            i++;
+            sf.pushCmd(cmd);
+        } else{
+            Iterator<SketchComponent> it = sf.sketchAl.iterator();
+            while (it.hasNext()){
+                SketchComponent sg = it.next();
+                if(sg.checkSelected()){
+                    sg.applyTranslation(-tx, -ty);
+                }
+            }
         }
-        sf.pushCmd(cmd);
 
         sf.pressedOnSketch = false;
     }

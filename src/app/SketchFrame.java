@@ -58,7 +58,7 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
         mp = new JPanel();
         mp.setLayout(new BoxLayout(mp, BoxLayout.PAGE_AXIS));
         mp.setOpaque(true);
-        mp.setBackground(new Color(0, 0, 0));
+        mp.setBackground(Color.BLACK);
         mp.setBorder(BorderFactory.createEmptyBorder(1, 2, 2, 2));
         mp.add(Box.createRigidArea(new Dimension(0, 2)));
         mp.add(tbp);
@@ -168,6 +168,9 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
                     new ActionListener() {
                         public void actionPerformed(ActionEvent evvv) {
                             color = colorChooser.getColor();
+                            // if (mode.getMode() == modeSelect){ for changing color after
+
+                            // }
                         }
                     },
                     null);
@@ -186,8 +189,10 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
     }
     public void handleUndo(){
         if (!cmdStack.isEmpty()){
+            System.out.println("cmd size"+ cmdStack.size());
             SketchCmd sCmd = cmdStack.pop();
             String cmd = sCmd.cmd;
+            System.out.println("cmd string "+cmd);
             if(cmd == modeSqre || cmd == modeCirc || cmd == modeRect || cmd == modeElps || cmd == modeLine || cmd == modeFree || cmd == editPaste){
                 // remove the item from the arraylist and add it to the undoCmdStack
                 for(int i=sCmd.size()-1; i>=0; i--){
@@ -254,6 +259,7 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
                     sketchAl.get(sCmd.getComponentIdx(i)).applyTranslation(tx, ty);
                 }
             }else if(cmd == editGroup){
+                System.out.println("Running");
                 // group the items again
                 Boolean selFlag = true;
                 SketchComponent sc = new SketchNode();
@@ -271,8 +277,10 @@ public class SketchFrame extends JFrame implements ActionListener, MenuConstants
                 }
                 sketchAl.add(sc);
             }else if(cmd == editUngroup){
+                
                 // ungroup the items again
                 for(int i = 0; i<sCmd.size(); i++){
+                    
                     SketchComponent sc = sCmd.getComponent(i);
                     int idx = sCmd.getComponentIdx(i);
                     Boolean selFlag =  sketchAl.get(idx).checkSelected();

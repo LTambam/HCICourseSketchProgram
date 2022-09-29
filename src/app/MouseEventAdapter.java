@@ -17,7 +17,6 @@ public class MouseEventAdapter extends MouseAdapter implements MenuConstants{
     }
     public void mouseClicked(MouseEvent e) {
         // call the mouse clicked function for state 0 and 1 for the current mode
-        System.out.println("Click gets called");
         sf.clickPoint = new Point(e.getPoint());
 
         if (sf.state == 0) {

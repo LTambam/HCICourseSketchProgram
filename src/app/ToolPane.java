@@ -16,7 +16,7 @@ public class ToolPane extends JPanel implements MenuConstants, ActionListener{
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.weightx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        // gbc.gridwidth = GridBagConstraints.REMAINDER;
         tb1 = createToolBar1();
         add(tb1, gbc);
         // tb2 = createToolBar2();
